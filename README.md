@@ -4,6 +4,7 @@ Project for ECE695
 NOTE: THIS IS A WORKING README!!! WILL BE UPDATED WITH UPCOMING DUE DATES AND OTHER MISCELANEOUS INFO!!!
 
 Upcoming Deadlines
+- ASAP - sign up for presentation time: https://docs.google.com/spreadsheets/d/13IzV9mz9zrxV30mV95UXKtiNcUnJssBR-czkruXEIBA/edit#gid=0
 - Tuesday, February 28 - 5 minute proposal presentation during lecture
 - Sunday, March 5 - Email report to professor and TA (include feedback received during presentation)
 
