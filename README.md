@@ -21,10 +21,18 @@ Contents for proposal report:
 - references page with the related work
 
 Starting place for potential project ideas:
+Leveraging Sound and Wrist Motion to Detect Activities of Daily Living with Commodity Smartwatches
 https://dl.acm.org/doi/pdf/10.1145/3534582
 
 Dataset for that paper:
 https://dataverse.tdl.org/dataset.xhtml?persistentId=doi:10.18738/T8/NNDFQD
+
+Other possible references/ideas:
+	Ensembles of Deep LSTM Learners for Activity Recognition using Wearables
+		https://arxiv.org/pdf/1703.09370.pdf
+	
+	Ok Google, What Am I Doing? Acoustic Activity Recognition Bounded by Conversational Assistant Interactions
+		http://users.ece.utexas.edu/~ethomaz/papers/j10.pdf
 
 IEEE format for report:
 https://www.ieee.org/conferences/publishing/templates.html
