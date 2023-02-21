@@ -28,11 +28,11 @@ Dataset for that paper:
 https://dataverse.tdl.org/dataset.xhtml?persistentId=doi:10.18738/T8/NNDFQD
 
 Other possible references/ideas:
-	Ensembles of Deep LSTM Learners for Activity Recognition using Wearables
-		https://arxiv.org/pdf/1703.09370.pdf
-	
-	Ok Google, What Am I Doing? Acoustic Activity Recognition Bounded by Conversational Assistant Interactions
-		http://users.ece.utexas.edu/~ethomaz/papers/j10.pdf
+Ensembles of Deep LSTM Learners for Activity Recognition using Wearables
+https://arxiv.org/pdf/1703.09370.pdf
+
+Ok Google, What Am I Doing? Acoustic Activity Recognition Bounded by Conversational Assistant Interactions
+http://users.ece.utexas.edu/~ethomaz/papers/j10.pdf
 
 IEEE format for report:
 https://www.ieee.org/conferences/publishing/templates.html
