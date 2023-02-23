@@ -34,5 +34,11 @@ https://dataverse.tdl.org/dataset.xhtml?persistentId=doi:10.18738/T8/NNDFQD
 Ensembles of Deep LSTM Learners for Activity Recognition using Wearables
 https://arxiv.org/pdf/1703.09370.pdf
 
+WristSense: Wrist-worn Sensor Device with Camera for Daily Activity Recognition
+https://ieeexplore.ieee.org/document/6197551
+
+AttnSense: Multi-level Attention Mechanism For Multimodal Human Activity Recognition
+https://www.ijcai.org/proceedings/2019/431
+
 Ok Google, What Am I Doing? Acoustic Activity Recognition Bounded by Conversational Assistant Interactions
 http://users.ece.utexas.edu/~ethomaz/papers/j10.pdf
