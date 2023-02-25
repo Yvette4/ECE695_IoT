@@ -1,0 +1,6 @@
+Report/*.aux
+Report/*.blg
+Report/*.log
+Report/*.out
+Report/*.run.xml
+Report/*.synctex.gz
