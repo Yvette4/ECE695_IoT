@@ -8,73 +8,147 @@
 \usepackage{textcomp}
 \usepackage{xcolor}
 \def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
-    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+		T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
 
 \usepackage{hyperref}
 \usepackage{biblatex} 
 \addbibresource{references.bib}
 
+% To get bulletpoints inside a table cell
+\usepackage{array}
+
 \begin{document}
-
-\title{Conference Paper Title*
-}
-
-\author{\IEEEauthorblockN{Yvette Espinoza}
-\IEEEauthorblockA{\textit{dept. name of organization (of Aff.)} \\
-\textit{name of organization (of Aff.)}\\
-Los Angeles, CA \\
-yespinoz@purdue.edu}
-\and
-\IEEEauthorblockN{2\textsuperscript{nd} Given Name Surname}
-\IEEEauthorblockA{\textit{dept. name of organization (of Aff.)} \\
-\textit{name of organization (of Aff.)}\\
-City, Country \\
-email address or ORCID}
-\and
-\IEEEauthorblockN{3\textsuperscript{rd} Given Name Surname}
-\IEEEauthorblockA{\textit{dept. name of organization (of Aff.)} \\
-\textit{name of organization (of Aff.)}\\
-City, Country \\
-email address or ORCID}
-}
-
-\maketitle
-
-\begin{abstract}
-TBD
-\end{abstract}
-
-\begin{IEEEkeywords}
-component, formatting, style, styling, insert
-\end{IEEEkeywords}
-
-\section{Introduction}
-
-Early research in activity detection aimed at finding differences in signal characteristics of the collected accelerometer data, and determining the ideal sensor placement. 
-In \cite{2011_Sensor_Positioning}, activities were grouped together into four categories by levels of physical activity, and sensors were placed throughout the body to determine the best location for each of the categories.
-Their results found each category performed best with a different sensor location. A sensor placed on the waist was best at detecting low level activities like eating, while a sensor on the chest or wrist was best at medium level activities like housework.
-
-While different sensor placement based on an activity would be ideal for performance, it would not be practical for widespread use.
-An accelerometer by itself is not enough to determine an activity, context would be needed, and different sensors on the body are an inconvenience for users. 
-Human activity recognition is widely used in healthcare applications, with the elderly being a large part of the user demographics \cite{2018_Robust_Activity}, to suit their needs the data collection would require an unobtrusive setup.
-To address the inconvenience of full body sensors and the need for context, \cite{2012_WristSense} used a wrist-worn device equipped with an accelerometer and camera to recognize daily activities. 
-The camera provided context for the activities, and the accelerometer provided characteristics of the body movement associated with different activities, both of which were used to train a model to predict the activity.
-
-The advancement in smart devices, like smartwatches and conversational assistants, allow for more sensors in a user friendly device.
-Conversational assistants, like a Google Home, and smartwatches are used to train a model to recognize activities of daily living \cite{2021_Ok_Google} \cite{2022_Leveraging_sound}.
-
-% YVETTE - talk about the machine learning advances --> smart devies allow for more data collection, which allow for better ML models and classifiers %
-
-
-\section{Section}
-
-\subsection{Subsection}
-
-\section*{Acknowledgment}
-
-Paper we are implementing \cite{2022_Leveraging_sound}.
-
-\nocite{*}
-\printbibliography
-
+	
+	\title{Recognizing Activities of Daily Living Using Audio and IMU Data from Commodity Smartwatches
+	}
+	
+	\author{
+		\IEEEauthorblockN{Yvette Espinoza}
+		\IEEEauthorblockA{\textit{Department of ECE} \\
+			\textit{Purdue University}\\
+			Los Angeles, CA \\
+			yespinoz@purdue.edu}
+		
+		\and
+		\IEEEauthorblockN{Cameron Johnson}
+		\IEEEauthorblockA{\textit{Department of ECE} \\
+			\textit{Purdue University}\\
+			Asheville, NC \\
+			john3096@purdue.edu}
+		
+		\and
+		\IEEEauthorblockN{Jahangir Mollah}
+		\IEEEauthorblockA{\textit{Department of ECE} \\
+			\textit{Purdue University}\\
+			Seattle, WA \\
+			jmollah@purdue.edu}
+	}
+	
+	\maketitle
+	
+	\begin{abstract}
+		TBD
+	\end{abstract}
+	
+	\begin{IEEEkeywords}
+		component, formatting, style, styling, insert
+	\end{IEEEkeywords}
+	
+	\section{Introduction}
+	
+	Early research in activity detection aimed at finding differences in signal characteristics of the collected accelerometer data, and determining the ideal sensor placement. 
+	In \cite{2011_Sensor_Positioning}, activities were grouped together into four categories by levels of physical activity, and sensors were placed throughout the body to determine the best location for each of the categories.
+	Their results found each category performed best with a different sensor location. A sensor placed on the waist was best at detecting low level activities like eating, while a sensor on the chest or wrist was best at medium level activities like housework.
+	
+	While different sensor placement based on an activity would be ideal for performance, it would not be practical for widespread use.
+	An accelerometer by itself is not enough to determine an activity, context would be needed, and different sensors on the body are an inconvenience for users. 
+	Human activity recognition is widely used in healthcare applications, with the elderly being a large part of the user demographics \cite{2018_Robust_Activity}, to suit their needs the data collection would require an unobtrusive setup.
+	To address the inconvenience of full body sensors and the need for context, \cite{2012_WristSense} used a wrist-worn device equipped with an accelerometer and camera to recognize daily activities. 
+	The camera provided context for the activities, and the accelerometer provided characteristics of the body movement associated with different activities, both of which were used to train a model to predict the activity.
+	
+	The advancement in smart devices, like smartwatches and conversational assistants, allow for more sensors in a user friendly device.
+	Conversational assistants, like a Google Home, and smartwatches are used to train a model to recognize activities of daily living \cite{2021_Ok_Google} \cite{2022_Leveraging_sound}.
+	
+	% FUTURE WORK --> ADD AS PART OF FINAL REPORT!!!
+	% [YVETTE - add details on the advancements of ML models → now have attention mechanisms]
+	% 
+	
+	
+	We propose a research project, recognizing activities of daily living using the IMU and audio data from a commodity smartwatch. We will be following existing research performed in the paper, Leveraging Sound and Wrist Motion to Detect Activities of Daily Living with Commodity Smartwatches. Our process will involve conducting experiments wearing a smartwatch and performing a variety of basic activities such as writing, brushing teeth, and washing hands. We will record IMU data and audio data using the mic on the watch as input to a deep learning model which fuses the inertial data and acoustic data to determine the activity being performed. Recognizing activities of daily living using inertial data has been the focus of a number of studies in the recent past, but fewer studies have included acoustic data in the model. We believe using both types will result in more accurate recognition. Some activities such as writing are more easily captured using inertial data while other activities such as cutting paper are more captured using acoustic data.  Smart watches prove especially practical for recording both types of data because the mic is at close proximity to the hand which is often close to the activity being performed and the IMU records useful motion on the wrist as opposed to a smartphone in the pocket or strapped to the chest.
+	
+	[Hardware setup]
+	The authors of \cite{2022_Leveraging_sound} used the same watch for all of their experiments. They used a Fossil Gen 4, Android Wear OS 2.21, Custom application collects data synchronously and stores locally on watch. Max inertial sensor samples at rate 50 Hz, acoustic sampled at 22.05 KHz. We will be using different watch manufacturers in our experiment to ensure generic compatibility.
+	
+	The paper that we follow conducted two generally different experiments. In the first experiment, an individual performs a series of activities for 30 seconds wearing a Fossil smartwatch which records inertial and acoustic data. There is a clear distinction between each activity and the watches are programmed to listen at frequent intervals. The authors implemented a variety of machine learning models to recognize the activity in this experiment with an accuracy of 94.3. The second experiment implements a less controlled, more realistic setting. [Describe] Accuracy of 55.8.
+	
+	
+	% YVETTE - talk about the machine learning advances --> smart devies allow for more data collection, which allow for better ML models and classifiers %
+	
+	\begin{table}[htbp]
+		\caption{Schedule}
+		\begin{center}
+			\begin{tabular}{| m{1.2cm} | m{4cm} | m{1.2cm} |}
+				\hline
+				\textbf{Phase} & \textbf{Activities} & \textbf{Due Date} \\
+				\hline
+				Planning & 
+				\begin{itemize}
+					\item Identify existing research data
+					\item Identify available hardware
+					\item Plan for how to capture and store data
+					\item Identify how to process data
+					\item Identify machine learning classification models
+				\end{itemize} &
+				March 18 \\
+				\hline
+				
+				Data Collection & 
+				\begin{itemize}
+					\item Capture and process raw data
+					\item Capture audio data at all times
+					\item Review existing research data
+					\item Get volunteers for experiments
+				\end{itemize} & 
+				April 1 \\
+				\hline
+				
+				Analysis & 
+				\begin{itemize}
+					\item Fuse data collected from different sources
+					\item Label data collected
+					\item Run the classification models
+					\item Analyze results
+				\end{itemize} & 
+				April 15 \\
+				\hline
+				
+				Finalize Report & 
+				\begin{itemize}
+					\item Write up final report
+					\item Create presentation
+				\end{itemize} & 
+				April 22 \\
+				\hline
+			\end{tabular}
+			\label{tab1}
+		\end{center}
+	\end{table}
+	
+	% Add image
+	
+	% Add more here...
+	
+	
+	
+	\section{Section}
+	
+	\subsection{Subsection}
+	
+	\section*{Acknowledgment}
+	
+	Paper we are implementing \cite{2022_Leveraging_sound}.
+	
+	\nocite{*}
+	\printbibliography
+	
 \end{document}
