@@ -19,6 +19,101 @@
 
 \refsection{0}
   \datalist[entry]{nty/global//global/global}
+    \entry{2021_Ok_Google}{article}{}
+      \name{author}{3}{}{%
+        {{hash=8c32349a89ce6321a556667cfc24e5d3}{%
+           family={Adaimi},
+           familyi={A\bibinitperiod},
+           given={Rebecca},
+           giveni={R\bibinitperiod}}}%
+        {{hash=f09f4c080935e1f54d7bbfe152f487e6}{%
+           family={Yong},
+           familyi={Y\bibinitperiod},
+           given={Howard},
+           giveni={H\bibinitperiod}}}%
+        {{hash=a831820fdffac329409648464c0ec08c}{%
+           family={Thomaz},
+           familyi={T\bibinitperiod},
+           given={Edison},
+           giveni={E\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {New York, NY, USA}%
+      }
+      \list{publisher}{1}{%
+        {Association for Computing Machinery}%
+      }
+      \strng{namehash}{d046376185bffd3f7673064655a21151}
+      \strng{fullhash}{d046376185bffd3f7673064655a21151}
+      \strng{bibnamehash}{d046376185bffd3f7673064655a21151}
+      \strng{authorbibnamehash}{d046376185bffd3f7673064655a21151}
+      \strng{authornamehash}{d046376185bffd3f7673064655a21151}
+      \strng{authorfullhash}{d046376185bffd3f7673064655a21151}
+      \field{sortinit}{A}
+      \field{sortinithash}{2f401846e2029bad6b3ecc16d50031e2}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Proc. ACM Interact. Mob. Wearable Ubiquitous Technol.}
+      \field{month}{3}
+      \field{number}{1}
+      \field{title}{Ok Google, What Am I Doing? Acoustic Activity Recognition Bounded by Conversational Assistant Interactions}
+      \field{volume}{5}
+      \field{year}{2021}
+      \verb{doi}
+      \verb 10.1145/3448090
+      \endverb
+      \verb{urlraw}
+      \verb https://doi.org/10.1145/3448090
+      \endverb
+      \verb{url}
+      \verb https://doi.org/10.1145/3448090
+      \endverb
+      \keyw{Human Activity Recognition,Smart Environment,Conversational Assistants,Audio Processing,Activities of Daily Living,Deep Learning,Environmental Sounds,Google Home,Smart Speaker,Voice Assistants}
+    \endentry
+    \entry{2011_Sensor_Positioning}{article}{}
+      \name{author}{4}{}{%
+        {{hash=73ff655ec8aec2a424ffb017551ae3e9}{%
+           family={Atallah},
+           familyi={A\bibinitperiod},
+           given={Louis},
+           giveni={L\bibinitperiod}}}%
+        {{hash=3795097cccbdd78f7e4fbe926dbba9a0}{%
+           family={Lo},
+           familyi={L\bibinitperiod},
+           given={Benny},
+           giveni={B\bibinitperiod}}}%
+        {{hash=b1f8273cbf60fef615f5cd60cefc253f}{%
+           family={King},
+           familyi={K\bibinitperiod},
+           given={Rachel},
+           giveni={R\bibinitperiod}}}%
+        {{hash=fcdeef628f31c9c5305ee39311f1fcc6}{%
+           family={Yang},
+           familyi={Y\bibinitperiod},
+           given={Guang-Zhong},
+           giveni={G\bibinithyphendelim Z\bibinitperiod}}}%
+      }
+      \strng{namehash}{0dd18e39f98e630eb65ef02c196be98f}
+      \strng{fullhash}{75a071971c0edfe61acb2478f1fdda11}
+      \strng{bibnamehash}{0dd18e39f98e630eb65ef02c196be98f}
+      \strng{authorbibnamehash}{0dd18e39f98e630eb65ef02c196be98f}
+      \strng{authornamehash}{0dd18e39f98e630eb65ef02c196be98f}
+      \strng{authorfullhash}{75a071971c0edfe61acb2478f1fdda11}
+      \field{sortinit}{A}
+      \field{sortinithash}{2f401846e2029bad6b3ecc16d50031e2}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{IEEE Transactions on Biomedical Circuits and Systems}
+      \field{number}{4}
+      \field{title}{Sensor Positioning for Activity Recognition Using Wearable Accelerometers}
+      \field{volume}{5}
+      \field{year}{2011}
+      \field{pages}{320\bibrangedash 329}
+      \range{pages}{10}
+      \verb{doi}
+      \verb 10.1109/TBCAS.2011.2160540
+      \endverb
+    \endentry
     \entry{2022_Leveraging_sound}{article}{}
       \name{author}{3}{}{%
         {{hash=3a0c58c865e6e3b5f9f736aa0768992a}{%
@@ -68,6 +163,345 @@
       \verb https://doi.org/10.1145/3534582
       \endverb
       \keyw{Audio Classification,Smartwatch,Dataset,Gesture Recognition,Motion sensing,Sound Sensing,Human Activity Recognition,Activities of Daily Living,Wearable,Multimodal classification,In-the-wild}
+    \endentry
+    \entry{2018_Robust_Activity}{article}{}
+      \name{author}{4}{}{%
+        {{hash=426a0c83bf824d0896deb25b742107f7}{%
+           family={Chen},
+           familyi={C\bibinitperiod},
+           given={Yi},
+           giveni={Y\bibinitperiod}}}%
+        {{hash=df12d9671ed9c182a249ef2f6af6a5ca}{%
+           family={Yu},
+           familyi={Y\bibinitperiod},
+           given={Li},
+           giveni={L\bibinitperiod}}}%
+        {{hash=a6dfcf596c78f283d2bfe9f066bca14d}{%
+           family={Ota},
+           familyi={O\bibinitperiod},
+           given={Kaoru},
+           giveni={K\bibinitperiod}}}%
+        {{hash=fdb5dd5d5f67892dfaaaacfaf13b22fa}{%
+           family={Dong},
+           familyi={D\bibinitperiod},
+           given={Mianxiong},
+           giveni={M\bibinitperiod}}}%
+      }
+      \strng{namehash}{42c2aaca099064c36f4b931318a04ceb}
+      \strng{fullhash}{cf623e138c17a2deeee41c349c870d80}
+      \strng{bibnamehash}{42c2aaca099064c36f4b931318a04ceb}
+      \strng{authorbibnamehash}{42c2aaca099064c36f4b931318a04ceb}
+      \strng{authornamehash}{42c2aaca099064c36f4b931318a04ceb}
+      \strng{authorfullhash}{cf623e138c17a2deeee41c349c870d80}
+      \field{sortinit}{C}
+      \field{sortinithash}{4d103a86280481745c9c897c925753c0}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{IEEE Journal of Biomedical and Health Informatics}
+      \field{number}{6}
+      \field{title}{Robust Activity Recognition for Aging Society}
+      \field{volume}{22}
+      \field{year}{2018}
+      \field{pages}{1754\bibrangedash 1764}
+      \range{pages}{11}
+      \verb{doi}
+      \verb 10.1109/JBHI.2018.2819182
+      \endverb
+    \endentry
+    \entry{2019_Graph_Neural_Networks}{inproceedings}{}
+      \name{author}{3}{}{%
+        {{hash=a39b7b06e374f2fc189e95eed742ec17}{%
+           family={Ioannidis},
+           familyi={I\bibinitperiod},
+           given={Vassilis\bibnamedelima N.},
+           giveni={V\bibinitperiod\bibinitdelim N\bibinitperiod}}}%
+        {{hash=52431b8c3fd0bf58455b3f913de96587}{%
+           family={Marques},
+           familyi={M\bibinitperiod},
+           given={Antonio\bibnamedelima G.},
+           giveni={A\bibinitperiod\bibinitdelim G\bibinitperiod}}}%
+        {{hash=2808efbb7839110315be19b3f0a43f20}{%
+           family={Giannakis},
+           familyi={G\bibinitperiod},
+           given={Georgios\bibnamedelima B.},
+           giveni={G\bibinitperiod\bibinitdelim B\bibinitperiod}}}%
+      }
+      \strng{namehash}{f29fe6234746e79bf9802e8eb43ea81a}
+      \strng{fullhash}{f29fe6234746e79bf9802e8eb43ea81a}
+      \strng{bibnamehash}{f29fe6234746e79bf9802e8eb43ea81a}
+      \strng{authorbibnamehash}{f29fe6234746e79bf9802e8eb43ea81a}
+      \strng{authornamehash}{f29fe6234746e79bf9802e8eb43ea81a}
+      \strng{authorfullhash}{f29fe6234746e79bf9802e8eb43ea81a}
+      \field{sortinit}{I}
+      \field{sortinithash}{8d291c51ee89b6cd86bf5379f0b151d8}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{2019 IEEE 8th International Workshop on Computational Advances in Multi-Sensor Adaptive Processing (CAMSAP)}
+      \field{title}{Graph Neural Networks for Predicting Protein Functions}
+      \field{year}{2019}
+      \true{nocite}
+      \field{pages}{221\bibrangedash 225}
+      \range{pages}{5}
+      \verb{doi}
+      \verb 10.1109/CAMSAP45676.2019.9022646
+      \endverb
+    \endentry
+    \entry{2020_SoundWatch}{inproceedings}{}
+      \name{author}{6}{}{%
+        {{hash=630a90011e86f1c70466a55f4b266e27}{%
+           family={Jain},
+           familyi={J\bibinitperiod},
+           given={Dhruv},
+           giveni={D\bibinitperiod}}}%
+        {{hash=db30d5b84766aba4b0527596b3aa3ad6}{%
+           family={Ngo},
+           familyi={N\bibinitperiod},
+           given={Hung},
+           giveni={H\bibinitperiod}}}%
+        {{hash=7744790345876a0755d5a5c486ff7369}{%
+           family={Patel},
+           familyi={P\bibinitperiod},
+           given={Pratyush},
+           giveni={P\bibinitperiod}}}%
+        {{hash=623964142dd26e1ec71c514873923658}{%
+           family={Goodman},
+           familyi={G\bibinitperiod},
+           given={Steven},
+           giveni={S\bibinitperiod}}}%
+        {{hash=d04bd9d6170d17397e611dafa981f9a2}{%
+           family={Findlater},
+           familyi={F\bibinitperiod},
+           given={Leah},
+           giveni={L\bibinitperiod}}}%
+        {{hash=5fe65c36f69c3a73477b4d85597bc67d}{%
+           family={Froehlich},
+           familyi={F\bibinitperiod},
+           given={Jon},
+           giveni={J\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {Virtual Event, Greece}%
+      }
+      \list{publisher}{1}{%
+        {Association for Computing Machinery}%
+      }
+      \strng{namehash}{2880e50c9e23ed2c426a10c20100f1f2}
+      \strng{fullhash}{765f59e7c67b400d3a79db7d89628922}
+      \strng{bibnamehash}{2880e50c9e23ed2c426a10c20100f1f2}
+      \strng{authorbibnamehash}{2880e50c9e23ed2c426a10c20100f1f2}
+      \strng{authornamehash}{2880e50c9e23ed2c426a10c20100f1f2}
+      \strng{authorfullhash}{765f59e7c67b400d3a79db7d89628922}
+      \field{sortinit}{J}
+      \field{sortinithash}{b2f54a9081ace9966a7cb9413811edb4}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{isbn}{9781450371032}
+      \field{series}{ASSETS '20}
+      \field{title}{SoundWatch: Exploring Smartwatch-Based Deep Learning Approaches to Support Sound Awareness for Deaf and Hard of Hearing Users}
+      \field{year}{2020}
+      \true{nocite}
+      \verb{doi}
+      \verb 10.1145/3373625.3416991
+      \endverb
+      \verb{urlraw}
+      \verb https://doi.org/10.1145/3373625.3416991
+      \endverb
+      \verb{url}
+      \verb https://doi.org/10.1145/3373625.3416991
+      \endverb
+      \keyw{smartwatch,Deaf,wearable,hard of hearing,sound classification,CNN,sound awareness,deep learning,Accessibility}
+    \endentry
+    \entry{2015_Audio_based_detection}{article}{}
+      \name{author}{2}{}{%
+        {{hash=7a259e38846052ebe065a90324e065ce}{%
+           family={Kalantarian},
+           familyi={K\bibinitperiod},
+           given={Haik},
+           giveni={H\bibinitperiod}}}%
+        {{hash=a0b1d3e35bc4d05fb1a34711a4ebcad8}{%
+           family={Sarrafzadeh},
+           familyi={S\bibinitperiod},
+           given={Majid},
+           giveni={M\bibinitperiod}}}%
+      }
+      \strng{namehash}{aec39fd1c3e22ea1e9bedb1b2b0aaa0e}
+      \strng{fullhash}{aec39fd1c3e22ea1e9bedb1b2b0aaa0e}
+      \strng{bibnamehash}{aec39fd1c3e22ea1e9bedb1b2b0aaa0e}
+      \strng{authorbibnamehash}{aec39fd1c3e22ea1e9bedb1b2b0aaa0e}
+      \strng{authornamehash}{aec39fd1c3e22ea1e9bedb1b2b0aaa0e}
+      \strng{authorfullhash}{aec39fd1c3e22ea1e9bedb1b2b0aaa0e}
+      \field{sortinit}{K}
+      \field{sortinithash}{c02bf6bff1c488450c352b40f5d853ab}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{issn}{0010-4825}
+      \field{journaltitle}{Computers in biology and medicine}
+      \field{month}{10}
+      \field{title}{Audio-based detection and evaluation of eating behavior using the smartwatch platform}
+      \field{volume}{65}
+      \field{year}{2015}
+      \true{nocite}
+      \field{pages}{1\bibrangedash 9}
+      \range{pages}{9}
+      \verb{doi}
+      \verb 10.1016/j.compbiomed.2015.07.013
+      \endverb
+      \verb{urlraw}
+      \verb https://doi.org/10.1016/j.compbiomed.2015.07.013
+      \endverb
+      \verb{url}
+      \verb https://doi.org/10.1016/j.compbiomed.2015.07.013
+      \endverb
+    \endentry
+    \entry{2012_WristSense}{inproceedings}{}
+      \name{author}{4}{}{%
+        {{hash=2a9fe198744f07b69c69580e7822a80a}{%
+           family={Maekawa},
+           familyi={M\bibinitperiod},
+           given={Takuya},
+           giveni={T\bibinitperiod}}}%
+        {{hash=30452478d25e67c087914ce6d2605882}{%
+           family={Kishino},
+           familyi={K\bibinitperiod},
+           given={Yasue},
+           giveni={Y\bibinitperiod}}}%
+        {{hash=64d64f69dc6a78820c865ab98ba006c4}{%
+           family={Yanagisawa},
+           familyi={Y\bibinitperiod},
+           given={Yutaka},
+           giveni={Y\bibinitperiod}}}%
+        {{hash=8ad08195319f922fa1fd18ae85c5b68e}{%
+           family={Sakurai},
+           familyi={S\bibinitperiod},
+           given={Yasushi},
+           giveni={Y\bibinitperiod}}}%
+      }
+      \strng{namehash}{5580d727623a582ce7cb2b422871f541}
+      \strng{fullhash}{9794243e5d684148fa03de24307d2e6a}
+      \strng{bibnamehash}{5580d727623a582ce7cb2b422871f541}
+      \strng{authorbibnamehash}{5580d727623a582ce7cb2b422871f541}
+      \strng{authornamehash}{5580d727623a582ce7cb2b422871f541}
+      \strng{authorfullhash}{9794243e5d684148fa03de24307d2e6a}
+      \field{sortinit}{M}
+      \field{sortinithash}{4625c616857f13d17ce56f7d4f97d451}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{2012 IEEE International Conference on Pervasive Computing and Communications Workshops}
+      \field{title}{WristSense: Wrist-worn sensor device with camera for daily activity recognition}
+      \field{year}{2012}
+      \field{pages}{510\bibrangedash 512}
+      \range{pages}{3}
+      \verb{doi}
+      \verb 10.1109/PerComW.2012.6197551
+      \endverb
+    \endentry
+    \entry{2021_harAGE}{inproceedings}{}
+      \name{author}{4}{}{%
+        {{hash=0541a7ffb2e5dc29854bceacada98e5e}{%
+           family={Mallol-Ragolta},
+           familyi={M\bibinithyphendelim R\bibinitperiod},
+           given={Adria},
+           giveni={A\bibinitperiod}}}%
+        {{hash=76812e3177bdafdaa65537a29b0915a1}{%
+           family={Semertzidou},
+           familyi={S\bibinitperiod},
+           given={Anastasia},
+           giveni={A\bibinitperiod}}}%
+        {{hash=b2cdfe4f6a6d30aead026c255c5121cd}{%
+           family={Pateraki},
+           familyi={P\bibinitperiod},
+           given={Maria},
+           giveni={M\bibinitperiod}}}%
+        {{hash=952e7ee348d058f9287a08ad1c034dbc}{%
+           family={Schuller},
+           familyi={S\bibinitperiod},
+           given={Björn},
+           giveni={B\bibinitperiod}}}%
+      }
+      \strng{namehash}{4cb2f6d6aa5064d536844cbf9a6cb194}
+      \strng{fullhash}{d7b2f61f4b30d0b0015eb5af5fa17537}
+      \strng{bibnamehash}{4cb2f6d6aa5064d536844cbf9a6cb194}
+      \strng{authorbibnamehash}{4cb2f6d6aa5064d536844cbf9a6cb194}
+      \strng{authornamehash}{4cb2f6d6aa5064d536844cbf9a6cb194}
+      \strng{authorfullhash}{d7b2f61f4b30d0b0015eb5af5fa17537}
+      \field{sortinit}{M}
+      \field{sortinithash}{4625c616857f13d17ce56f7d4f97d451}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{2021 16th IEEE International Conference on Automatic Face and Gesture Recognition (FG 2021)}
+      \field{title}{harAGE: A Novel Multimodal Smartwatch-based Dataset for Human Activity Recognition}
+      \field{year}{2021}
+      \true{nocite}
+      \field{pages}{01\bibrangedash 07}
+      \range{pages}{7}
+      \verb{doi}
+      \verb 10.1109/FG52635.2021.9666947
+      \endverb
+    \endentry
+    \entry{2022_Deep_Learning}{article}{}
+      \name{author}{7}{}{%
+        {{hash=39ba919190642a78c94b5b71b2796bc9}{%
+           family={Zhang},
+           familyi={Z\bibinitperiod},
+           given={Shibo},
+           giveni={S\bibinitperiod}}}%
+        {{hash=5b47fc51a457c7b044134d6172c5f3a9}{%
+           family={Li},
+           familyi={L\bibinitperiod},
+           given={Yaxuan},
+           giveni={Y\bibinitperiod}}}%
+        {{hash=55d7519ea65a9df65a1c4d1e7e37c304}{%
+           family={Zhang},
+           familyi={Z\bibinitperiod},
+           given={Shen},
+           giveni={S\bibinitperiod}}}%
+        {{hash=32030d8ede9da6006ae00bdb43d07607}{%
+           family={Shahabi},
+           familyi={S\bibinitperiod},
+           given={Farzad},
+           giveni={F\bibinitperiod}}}%
+        {{hash=e3eeaf656e909682058363aef71ea48d}{%
+           family={Xia},
+           familyi={X\bibinitperiod},
+           given={Stephen},
+           giveni={S\bibinitperiod}}}%
+        {{hash=6d8b6548edf7f293d0d08a8a4662cd40}{%
+           family={Deng},
+           familyi={D\bibinitperiod},
+           given={Yu},
+           giveni={Y\bibinitperiod}}}%
+        {{hash=6f7ec134b69e248a4f37eadab3d4d126}{%
+           family={Alshurafa},
+           familyi={A\bibinitperiod},
+           given={Nabil},
+           giveni={N\bibinitperiod}}}%
+      }
+      \strng{namehash}{8ce88483ed117fa5657e91fcc5472d6e}
+      \strng{fullhash}{e62261eb3e86a63c83f1041f91d91965}
+      \strng{bibnamehash}{8ce88483ed117fa5657e91fcc5472d6e}
+      \strng{authorbibnamehash}{8ce88483ed117fa5657e91fcc5472d6e}
+      \strng{authornamehash}{8ce88483ed117fa5657e91fcc5472d6e}
+      \strng{authorfullhash}{e62261eb3e86a63c83f1041f91d91965}
+      \field{sortinit}{Z}
+      \field{sortinithash}{96892c0b0a36bb8557c40c49813d48b3}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{issn}{1424-8220}
+      \field{journaltitle}{Sensors}
+      \field{number}{4}
+      \field{title}{Deep Learning in Human Activity Recognition with Wearable Sensors: A Review on Advances}
+      \field{volume}{22}
+      \field{year}{2022}
+      \true{nocite}
+      \verb{doi}
+      \verb 10.3390/s22041476
+      \endverb
+      \verb{urlraw}
+      \verb https://www.mdpi.com/1424-8220/22/4/1476
+      \endverb
+      \verb{url}
+      \verb https://www.mdpi.com/1424-8220/22/4/1476
+      \endverb
     \endentry
   \enddatalist
 \endrefsection

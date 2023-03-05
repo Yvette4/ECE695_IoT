@@ -2344,7 +2344,15 @@
     <bcf:datasource type="file" datatype="bibtex" glob="false">references.bib</bcf:datasource>
   </bcf:bibdata>
   <bcf:section number="0">
-    <bcf:citekey order="1">2022_Leveraging_sound</bcf:citekey>
+    <bcf:citekey order="1">2011_Sensor_Positioning</bcf:citekey>
+    <bcf:citekey order="2">2018_Robust_Activity</bcf:citekey>
+    <bcf:citekey order="3">2012_WristSense</bcf:citekey>
+    <bcf:citekey order="4">2021_Ok_Google</bcf:citekey>
+    <bcf:citekey order="5">2022_Leveraging_sound</bcf:citekey>
+    <bcf:citekey order="6">2022_Leveraging_sound</bcf:citekey>
+    <bcf:citekey order="7">2022_Leveraging_sound</bcf:citekey>
+    <bcf:citekey order="8">2022_Leveraging_sound</bcf:citekey>
+    <bcf:citekey order="9">2022_Leveraging_sound</bcf:citekey>
     <bcf:citekey order="0" nocite="1">*</bcf:citekey>
   </bcf:section>
   <!-- SORTING TEMPLATES -->
