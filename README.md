@@ -42,3 +42,7 @@ https://www.ijcai.org/proceedings/2019/431
 
 Ok Google, What Am I Doing? Acoustic Activity Recognition Bounded by Conversational Assistant Interactions
 http://users.ece.utexas.edu/~ethomaz/papers/j10.pdf
+
+Author with lots of papers
+https://www.rebeccaadaimi.com/publications/audioimuwatch/
+
