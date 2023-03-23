@@ -4,3 +4,4 @@ Report/*.log
 Report/*.out
 Report/*.run.xml
 Report/*.synctex.gz
+Project/Data/*
