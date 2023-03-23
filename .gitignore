@@ -4,4 +4,4 @@ Report/*.log
 Report/*.out
 Report/*.run.xml
 Report/*.synctex.gz
-Project/Data/*
+Project/Data/rawAudioSegmentedData_window_10_hop_0.5_Test.pkl
