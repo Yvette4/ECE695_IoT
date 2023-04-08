@@ -140,15 +140,23 @@ def plot_confusion(
 
     im = ax.imshow(cm_normalized, interpolation="nearest", cmap=cmap)
 
+    num_labels = 23
+    custom_labels = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W']
+
     ax.set(
-        xticks=np.arange(cm.shape[1]),
-        yticks=np.arange(cm.shape[0]),
-        xticklabels=class_map,
-        yticklabels=class_map,
+        #xticks=np.arange(cm.shape[1]),
+        #yticks=np.arange(cm.shape[0]),
+        #xticklabels=class_map,
+        #yticklabels=class_map,
+	xticks=np.arange(num_labels),
+        yticks=np.arange(num_labels),
+        xticklabels=custom_labels,
+        yticklabels=custom_labels,
         # title="Epoch {epoch}",
         ylabel="True label",
         xlabel="Predicted label"
     )
+    '''
     plt.setp(ax.get_yticklabels(),fontsize='xx-large')
     plt.setp(ax.get_xticklabels(), ha="right", rotation_mode="anchor",fontsize='xx-large')
 
@@ -168,6 +176,7 @@ def plot_confusion(
                 )
     # high, low = ax.get_ylim()
     # ax.set_ylim(high, low)
+    '''
     fig.tight_layout()
     plt.tight_layout()
     # plt.savefig(
