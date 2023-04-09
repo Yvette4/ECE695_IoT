@@ -25,7 +25,7 @@ import _pickle as cPickle
 
 
 #from models import AttendDiscriminate_MotionAudio
-from models import AttendDiscriminate_MotionAudio_CNN14_Concatenate
+from models import AttendDiscriminate
 import torch
 torch.backends.cudnn.benchmark=True
 torch.manual_seed(1)
@@ -67,7 +67,7 @@ import warnings
 warnings.filterwarnings("ignore")
 
 
-#LOPO
+#LOSO
 
 def model_train(model, dataset, dataset_val, args):
     print(paint("[STEP 4] Running HAR training loop ..."))
@@ -98,6 +98,7 @@ def model_train(model, dataset, dataset_val, args):
 
     metric_best = 0.0
     start_time = time.time()
+
     for epoch in range(args['epochs']):
         print("--" * 50)
         print("[-] Learning rate: ", optimizer.param_groups[0]["lr"])
@@ -140,12 +141,12 @@ def model_train(model, dataset, dataset_val, args):
                 checkpoint, os.path.join(model.path_checkpoints, "checkpoint_best.pth")
             )
 
-
-        # if epoch % 20 == 0:
-        #     torch.save(
-        #         checkpoint,
-        #         os.path.join(model.path_checkpoints, f"checkpoint_{epoch}.pth"),
-        #     )
+        if epoch % 5 == 0:
+            print("path_checkpoints: ", model.path_checkpoints)
+            torch.save(
+                checkpoint,
+                os.path.join(model.path_checkpoints, f"checkpoint_{epoch}.pth"),
+            )
 
         if args['lr_step'] > 0:
             scheduler.step()
@@ -165,22 +166,23 @@ def model_train(model, dataset, dataset_val, args):
     print(paint(f"[STEP 4] Finished HAR training loop (h:m:s): {elapsed}"))
     print(paint("--" * 50, "blue"))
 
+
+
 def train_one_epoch(model, loader, criterion, optimizer, epoch, args):
 
     losses = AverageMeter("Loss")
     model.train()
 
-    for batch_idx, (data, data_a, target) in enumerate(loader):
+    for batch_idx, (data, target) in enumerate(loader):
         data = data.cuda()
-        data_a = data_a.cuda()
         target = target.view(-1).cuda()
 
         centers = model.centers
 
         if args['mixup']:
-            data, data_a, y_a_y_b_lam = mixup_data_AudioMotion(data, data_a, target, args['alpha'])
+            data, y_a_y_b_lam = mixup_data(data, target, args['alpha'])
 
-        z, logits = model(data, data_a)
+        z, logits = model(data)
 
         if args['mixup']:
             criterion = MixUpLoss(criterion)
@@ -215,15 +217,13 @@ def eval_one_epoch(model, loader, criterion, epoch, logger, args):
     model.eval()
 
     with torch.no_grad():
-        for batch_idx, (data, data_a, target) in enumerate(loader):
+        for batch_idx, (data, target) in enumerate(loader):
             data = data.cuda()
-            data_a = data_a.cuda()
             target = target.cuda()
 
-            z, logits = model(data,data_a)
+            z, logits = model(data)
             loss = criterion(logits, target.view(-1))
             losses.update(loss.item(), data.shape[0])
-
             probabilities = nn.Softmax(dim=1)(logits)
             _, predictions = torch.max(probabilities, 1)
 
@@ -287,14 +287,14 @@ def model_eval(model, dataset_test, args):
             f"\tacc: {acc_test:.2f}(%)\tfm: {fm_test:.2f}(%)\trm: {rm_test:.2f}(%)\tpm: {pm_test:.2f}(%)\tfw: {fw_test:.2f}(%)"
         )
     )
+
     results.writerow([str(args['participant']), str(pm_test), str(rm_test), str(fm_test), str(acc_test)])
+
 
     elapsed = round(time.time() - start_time)
     elapsed = str(datetime.timedelta(seconds=elapsed))
     print(paint(f"[STEP 5] Finished HAR evaluation loop (h:m:s): {elapsed}"))
-
-
-print('Cuda available? ', torch.cuda.is_available())
+    
 
 P = 15
 win_size = 10
@@ -322,12 +322,8 @@ else:
     with open('../Data/rawAudioSegmentedData_window_' + str(win_size) + '_hop_' + str(hop) + '_Test.pkl', 'wb') as f:
         pickle.dump(participants, f)
 
-print(np.shape(participants[0].rawAdataX_s1))
-print(np.shape(participants[0].rawMdataX_s1))
-print(np.shape(participants[0].rawdataY_s1))
-
-model_name = 'DeepConvLSTM_MotionAudio_CNN14_Concatenate'
-experiment = f'LOPO+1_{model_name}'
+model_name = 'AttendDiscriminate'
+experiment = f'LOSO_{model_name}'
 
 config_model = {
     "model": model_name,
@@ -369,49 +365,20 @@ for u in participants:
     args['participant'] = u.name
     config_model['participant'] = u.name
 
-    X_trainM = np.empty((0,np.shape(u.rawMdataX_s1)[1], np.shape(u.rawMdataX_s1)[-1]))
-    X_trainA = np.empty((0,np.shape(u.rawAdataX_s1)[-1]))
-    y_train = np.zeros((0, 1))
-
-    # limit to just 4 participants b/c running out of memory
-    i_partic = 1
-    for x in participants:
-        if x != u:
-            if i_partic == 4:
-              print('Stop at 4 participants, crashes otherwise.')
-              break
-            i_partic += 1
-
-            print("Adding data for Participant: " + x.name)
-            X_trainM = np.vstack((X_trainM, x.rawMdataX_s1[:]))
-            X_trainM = np.vstack((X_trainM, x.rawMdataX_s2[:]))
-            X_trainA = np.vstack((X_trainA, x.rawAdataX_s1[:]))
-            X_trainA = np.vstack((X_trainA, x.rawAdataX_s2[:]))
-            y_train = np.vstack((y_train, x.rawdataY_s1))
-            y_train = np.vstack((y_train, x.rawdataY_s2))
-
-    X_trainM = np.vstack((X_trainM,u.rawMdataX_s1[:]))
-    X_trainA = np.vstack((X_trainA,u.rawAdataX_s1[:]))
-    y_train = np.vstack((y_train,u.rawdataY_s1))
+    X_trainM = copy.deepcopy(u.rawMdataX_s1[:])
+    y_train = copy.deepcopy(u.rawdataY_s1)
     
     labels = np.array(u.labels)
-    X_testM = copy.deepcopy(u.rawMdataX_s2[:])
     y_test = copy.deepcopy(u.rawdataY_s2)
-    X_testA= copy.deepcopy(u.rawAdataX_s2[:])
+    X_testM= copy.deepcopy(u.rawMdataX_s2[:])
 
-    X_testA = X_testA[(y_test != 23)[:,0]]
-
-
+    '''
     X_testM = X_testM[(y_test != 23)[:,0]]
-    X_testA = X_testA[(y_test != 23)[:,0]]
-
+    X_testM = X_testM[(y_test != 23)[:,0]]
     y_test = y_test[y_test != 23]
-
     X_trainM = X_trainM[(y_train != 23)[:,0]]
-    X_trainA = X_trainA[(y_train != 23)[:,0]]
-
     y_train = y_train[y_train != 23]
-
+    '''
 
     classes = np.unique(y_test).astype(int)
     # 
@@ -440,7 +407,8 @@ for u in participants:
     args['beta']= 0.003
     args['print_freq']= 40
     args['init_weights'] = None
-    args['epochs'] = 100
+    args['epochs'] = 5
+    #args['epochs'] = 100
     args['class_map'] = [chr(a+97).upper() for a in list(range(23))]
 
     # show args
@@ -451,42 +419,32 @@ for u in participants:
             f"[-] Using {torch.cuda.device_count()} GPU: {torch.cuda.is_available()}"
         )
     )
-    # commenting out below to save output space
     #get_info_params(model)
     #get_info_layers(model)
     print("##" * 50)
 
-    statistics_path = './statistics/LOPO/{}/participant_{}/batch_size={}/statistics.pkl'.format(
+    statistics_path = './statistics/LOSO/{}/participant_{}/batch_size={}/statistics.pkl'.format(
                 model_name,u.name, args['batch_size'])
     if not os.path.exists(os.path.dirname(statistics_path)):
         os.makedirs(os.path.dirname(statistics_path))
 
 
     # Statistics
-    # running outa memory somewhere here...
     statistics_container = StatisticsContainer(statistics_path)
     args['statistics'] = statistics_container
 
     x_trainM_tensor = torch.from_numpy(np.array(X_trainM)).float()
-    x_trainA_tensor = torch.from_numpy(np.array(X_trainA)).float()
     y_train_tensor = torch.from_numpy(np.array(y_train)).long()
 
-    print('x_trainM', np.shape(x_trainM_tensor))
     x_testM_tensor = torch.from_numpy(np.array(X_testM)).float()
-    x_testA_tensor = torch.from_numpy(np.array(X_testA)).float()
     y_test_tensor = torch.from_numpy(np.array(y_test)).long()
 
-    print('x_testM', np.shape(x_testM_tensor))
     x_valM_tensor = torch.from_numpy(np.array(X_testM)).float()
-    x_valA_tensor = torch.from_numpy(np.array(X_testA)).float()
     y_val_tensor = torch.from_numpy(np.array(y_test)).long()
 
-    print('x_valM', np.shape(x_valM_tensor))
-    train_data = TensorDataset(x_trainM_tensor, x_trainA_tensor, y_train_tensor)
-    test_data = TensorDataset(x_testM_tensor, x_testA_tensor, y_test_tensor)
-    val_data = TensorDataset(x_valM_tensor, x_valA_tensor, y_val_tensor)
-    print(np.shape(train_data))
-    # not getting this far!
+    train_data = TensorDataset(x_trainM_tensor, y_train_tensor)
+    test_data = TensorDataset(x_testM_tensor, y_test_tensor)
+    val_data = TensorDataset(x_valM_tensor, y_val_tensor)
 
 
     # [STEP 4] train HAR models
@@ -499,11 +457,9 @@ for u in participants:
     model_eval(model, test_data, args)
     plotCNNStatistics(statistics_path, u)
 
-    del train_data, test_data, val_data, model, 
-file.close()
+    del train_data, test_data, val_data, x_trainM_tensor, x_testM_tensor, y_train_tensor, y_test_tensor, x_valM_tensor, y_val_tensor, model
 
+file.close()
 
 plt.show()
 
-
-#print(np.shape(X_trainA), np.shape(X_testA), np.shape(y_train))

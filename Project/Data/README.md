@@ -1,6 +1,7 @@
 Deleted all the data files in order to simplify repo. While testing the code, all you need is the .pkl file.
 
 For LOPO or LOSO use: rawAudioSegmentedData_window_10_hop_0.5_Test.pkl
+
 For WILD use: WILD....pkl
 
 
