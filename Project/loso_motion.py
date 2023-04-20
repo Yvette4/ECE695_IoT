@@ -1,10 +1,11 @@
 #@title
 
 import time
+import sys
+sys.path.append('./libs/Sound-and-Wrist-Motion-for-Activities-of-Daily-Living-with-Smartwatches')
 from ParticipantLab import ParticipantLab as parti
 import numpy as np
 import tensorflow as tf
-import sys
 import pickle
 import os
 import copy
@@ -269,7 +270,7 @@ def model_eval(model, dataset_test, args):
     if args['train_mode']:
         path_checkpoint = os.path.join(model.path_checkpoints, "checkpoint_best.pth")
     else:
-        path_checkpoint = os.path.join(f"./weights/checkpoint.pth")
+        path_checkpoint = os.path.join(f"./Data/weights/checkpoint.pth")
 
     checkpoint = torch.load(path_checkpoint)
     model.load_state_dict(checkpoint["model_state_dict"])
@@ -294,32 +295,36 @@ def model_eval(model, dataset_test, args):
     elapsed = round(time.time() - start_time)
     elapsed = str(datetime.timedelta(seconds=elapsed))
     print(paint(f"[STEP 5] Finished HAR evaluation loop (h:m:s): {elapsed}"))
-    
 
-P = 15
+
+P = 5 # YVETTE - only using participants 2-6
 win_size = 10
 hop = .5
 
 participants = []
 
+# skip participant 1 - didn't have data for activity "H"
+participants_to_use = [2, 3, 4, 5, 20] #[2, 3, 4, 5, 6]
 
-if os.path.exists('../Data/rawAudioSegmentedData_window_' + str(win_size) + '_hop_' + str(hop) + '_Test.pkl'):
+print('YVETTE: cuda version = ', torch.version.cuda)
+
+if os.path.exists('./Data/rawAudioSegmentedData_window_' + str(win_size) + '_hop_' + str(hop) + '_Test.pkl'):
     print('loading pkl file')
-    with open('../Data/rawAudioSegmentedData_window_' + str(win_size) + '_hop_' + str(hop) + '_Test.pkl', 'rb') as f:
+    with open('./Data/rawAudioSegmentedData_window_' + str(win_size) + '_hop_' + str(hop) + '_Test.pkl', 'rb') as f:
         participants = pickle.load(f)
 else:
-
     start = time.time()
-    for j in range (1, P+1):
+    for j in participants_to_use: 
         pname = str(j).zfill(2)
-        p = parti(pname, '../Data',win_size, hop, normalized = False)
+        folder = './Data/P' + str(j).zfill(2) + '/'
+        p = parti(pname, folder, win_size, hop, normalized = False)
         p.readRawAudioMotionData()
         participants.append(p)
         print('participant',j,'data read...')
     end = time.time()
     print("time for feature extraction: " + str(end - start))
 
-    with open('../Data/rawAudioSegmentedData_window_' + str(win_size) + '_hop_' + str(hop) + '_Test.pkl', 'wb') as f:
+    with open('./Data/rawAudioSegmentedData_window_' + str(win_size) + '_hop_' + str(hop) + '_Test.pkl', 'wb') as f:
         pickle.dump(participants, f)
 
 model_name = 'AttendDiscriminate'
@@ -338,7 +343,7 @@ config_model = {
     "dropout_cls": .5,
     "activation": "ReLU",
     "sa_div": 1,
-    "num_class": 23,
+    "num_class": 3,
     "train_mode": True,
     "experiment": experiment,
     "window_size": 1024,
@@ -349,7 +354,7 @@ config_model = {
     "sample_rate": 22050
 }
 
-results_path = './performance_results/{}/{}/'.format(experiment,model_name)
+results_path = './Data/performance_results/{}/{}/'.format(experiment,model_name)
 if not os.path.exists(results_path):
     os.makedirs(results_path)
 
@@ -407,9 +412,9 @@ for u in participants:
     args['beta']= 0.003
     args['print_freq']= 40
     args['init_weights'] = None
-    args['epochs'] = 5
+    args['epochs'] = 10
     #args['epochs'] = 100
-    args['class_map'] = [chr(a+97).upper() for a in list(range(23))]
+    args['class_map'] = ['a', 'b', 'c']#[chr(a+97).upper() for a in list(range(23))] # YVETTE - set the classes of interest here for confusion plot
 
     # show args
     print("##" * 50)
@@ -423,7 +428,7 @@ for u in participants:
     #get_info_layers(model)
     print("##" * 50)
 
-    statistics_path = './statistics/LOSO/{}/participant_{}/batch_size={}/statistics.pkl'.format(
+    statistics_path = './Data/statistics/LOSO/{}/participant_{}/batch_size={}/statistics.pkl'.format(
                 model_name,u.name, args['batch_size'])
     if not os.path.exists(os.path.dirname(statistics_path)):
         os.makedirs(os.path.dirname(statistics_path))

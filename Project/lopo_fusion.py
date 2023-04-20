@@ -1,10 +1,11 @@
 #@title
 
 import time
+import sys
+sys.path.append('./libs/Sound-and-Wrist-Motion-for-Activities-of-Daily-Living-with-Smartwatches')
 from ParticipantLab import ParticipantLab as parti
 import numpy as np
 import tensorflow as tf
-import sys
 import pickle
 import os
 import copy
@@ -269,7 +270,7 @@ def model_eval(model, dataset_test, args):
     if args['train_mode']:
         path_checkpoint = os.path.join(model.path_checkpoints, "checkpoint_best.pth")
     else:
-        path_checkpoint = os.path.join(f"./weights/checkpoint.pth")
+        path_checkpoint = os.path.join(f"./Data/weights/checkpoint.pth")
 
     checkpoint = torch.load(path_checkpoint)
     model.load_state_dict(checkpoint["model_state_dict"])
@@ -293,109 +294,32 @@ def model_eval(model, dataset_test, args):
     elapsed = str(datetime.timedelta(seconds=elapsed))
     print(paint(f"[STEP 5] Finished HAR evaluation loop (h:m:s): {elapsed}"))
 
-
 P = 15
 win_size = 10
 hop = .5
 
 participants = []
+# skip participant 1 - didn't have data for activity "H"
+participants_to_use = [2, 3, 4, 5, 6]
 
 
-if os.path.exists('../Data/rawAudioSegmentedData_window_' + str(win_size) + '_hop_' + str(hop) + '_Test.pkl'):
+if os.path.exists('./Data/rawAudioSegmentedData_parti_' + str(P) + '_hop_' + str(hop) + '_Test.pkl'):
     print('loading pkl file')
-    with open('../Data/rawAudioSegmentedData_window_' + str(win_size) + '_hop_' + str(hop) + '_Test.pkl', 'rb') as f:
+    with open('./Data/rawAudioSegmentedData_parti_' + str(P) + '_hop_' + str(hop) + '_Test.pkl', 'rb') as f:
         participants = pickle.load(f)
 else:
-
     start = time.time()
-    for j in range (1, P+1):
+    for j in participants_to_use:
         pname = str(j).zfill(2)
-        p = parti(pname, '../Data',win_size, hop, normalized = False)
+        folder = './Data/P' + str(j).zfill(2) + '/'
+        p = parti(pname, folder, win_size, hop, normalized = False)
         p.readRawAudioMotionData()
         participants.append(p)
         print('participant',j,'data read...')
     end = time.time()
     print("time for feature extraction: " + str(end - start))
 
-    with open('../Data/rawAudioSegmentedData_window_' + str(win_size) + '_hop_' + str(hop) + '_Test.pkl', 'wb') as f:
-        pickle.dump(participants, f)
-
-
-model_name = 'DeepConvLSTM_MotionAudio_CNN14_Concatenate'
-experiment = f'LOPO+1_{model_name}'
-
-config_model = {
-    "model": model_name,
-    "input_dim": 6,
-    "hidden_dim": 128,
-    "filter_num": 64,
-    "filter_size": 5,
-    "enc_num_layers": 2,
-    "enc_is_bidirectional": False,
-    "dropout": .5,
-    "dropout_rnn": .25,
-    "dropout_cls": .5,
-    "activation": "ReLU",
-    "sa_div": 1,
-    "num_class": 23,
-    "train_mode": True,
-    "experiment": experiment,
-    "window_size": 1024,
-    "hop_size": 320,
-    "fmin": 50, 
-    "fmax": 11000,
-    "mel_bins": 64,
-    "sample_rate": 22050
-}
-
-results_path = './performance_results/{}/{}/'.format(experiment,model_name)
-if not os.path.exists(results_path):
-    os.makedirs(results_path)
-
-file = open(results_path + 'performance_results.csv', "w")
-results = csv.writer(file)
-results.writerow(["Participant", "Precision", "Recall", "F-Score", "Accuracy"])
-
-args = copy.deepcopy(config_model)
-
-for u in participants:
-                
-    print("participant : " + u.name)
-    args['participant'] = u.name
-    config_model['participant'] = u.name
-
-    X_trainM = np.empty((0,np.shape(u.rawMdataX_s1)[1], np.shape(u.rawMdataX_s1)[-1]))
-    X_trainA = np.empty((0,np.shape(u.rawAdataX_s1)[-1]))
-    y_train = np.zeros((0, 1))
-
-    for x in participants:
-        if x != u:
-         #@title
-# LOPO
-
-P = 15
-win_size = 10
-hop = .5
-
-participants = []
-
-
-if os.path.exists('../Data/rawAudioSegmentedData_parti_' + str(P) + '_hop_' + str(hop) + '_Test.pkl'):
-    print('loading pkl file')
-    with open('../Data/rawAudioSegmentedData_parti_' + str(P) + '_hop_' + str(hop) + '_Test.pkl', 'rb') as f:
-        participants = pickle.load(f)
-else:
-    start = time.time()
-    for j in range (1, P+1):
-        pname = str(j).zfill(2)
-        p = parti(pname, '../Data',win_size, hop, normalized = False)
-        p.readRawAudioMotionData()
-        participants.append(p)
-        print('participant',j,'data read...')
-    end = time.time()
-    print("time for feature extraction: " + str(end - start))
-
-    with open('../Data/rawAudioSegmentedData_parti_' + str(P) + '_hop_' + str(hop) + '_Test.pkl', 'wb') as f:
+    with open('./Data/rawAudioSegmentedData_parti_' + str(P) + '_hop_' + str(hop) + '_Test.pkl', 'wb') as f:
         pickle.dump(participants, f)
 
 #model_name = 'DeepConvLSTM_MotionAudio_CNN14_Concatenate'
@@ -426,7 +350,7 @@ config_model = {
     "sample_rate": 22050
 }
 
-results_path = './performance_results/{}/{}/'.format(experiment,model_name)
+results_path = './Data/performance_results/{}/{}/'.format(experiment,model_name)
 if not os.path.exists(results_path):
     os.makedirs(results_path)
 
@@ -552,7 +476,7 @@ for u in participants:
     #get_info_layers(model)
     print("##" * 50)
 
-    statistics_path = './statistics/LOPO/{}/participant_{}/batch_size={}/statistics.pkl'.format(
+    statistics_path = './Data/statistics/LOPO/{}/participant_{}/batch_size={}/statistics.pkl'.format(
                 model_name,u.name, args['batch_size'])
     if not os.path.exists(os.path.dirname(statistics_path)):
         os.makedirs(os.path.dirname(statistics_path))
@@ -595,99 +519,99 @@ file.close()
 plt.show()
 
 
-#print(np.shape(X_trainA), np.shape(X_testA), np.shape(y_train))   
+# #print(np.shape(X_trainA), np.shape(X_testA), np.shape(y_train))   
 
-    classes = np.unique(y_test).astype(int)
-    # 
-    # y_train = tf.keras.utils.to_categorical(y_train, num_classes=23, dtype='int32')
-    # y_test = tf.keras.utils.to_categorical(y_test, num_classes=23, dtype='int32')
+#     classes = np.unique(y_test).astype(int)
+#     # 
+#     # y_train = tf.keras.utils.to_categorical(y_train, num_classes=23, dtype='int32')
+#     # y_test = tf.keras.utils.to_categorical(y_test, num_classes=23, dtype='int32')
     
-    #import pdb; pdb.set_trace()
-    torch.cuda.empty_cache()
+#     #import pdb; pdb.set_trace()
+#     torch.cuda.empty_cache()
 
-    # [STEP 3] create HAR models
-    if torch.cuda.is_available():
-        model = create(model_name, config_model).cuda()
-        torch.backends.cudnn.benchmark = True
-        sys.stdout = Logger(
-            os.path.join(model.path_logs, f"log_main_{experiment}.txt")
-        )
-    args['batch_size']= 64
-    args['optimizer']= 'Adam'
-    args['clip_grad']= 0
-    args['lr']= 0.001
-    args['lr_decay']= 0.9
-    args['lr_step']= 10
-    args['mixup']= True
-    args['alpha']= 0.8
-    args['lr_cent']= 0.001
-    args['beta']= 0.003
-    args['print_freq']= 40
-    args['init_weights'] = None
-    args['epochs'] = 100
-    args['class_map'] = [chr(a+97).upper() for a in list(range(23))]
+#     # [STEP 3] create HAR models
+#     if torch.cuda.is_available():
+#         model = create(model_name, config_model).cuda()
+#         torch.backends.cudnn.benchmark = True
+#         sys.stdout = Logger(
+#             os.path.join(model.path_logs, f"log_main_{experiment}.txt")
+#         )
+#     args['batch_size']= 64
+#     args['optimizer']= 'Adam'
+#     args['clip_grad']= 0
+#     args['lr']= 0.001
+#     args['lr_decay']= 0.9
+#     args['lr_step']= 10
+#     args['mixup']= True
+#     args['alpha']= 0.8
+#     args['lr_cent']= 0.001
+#     args['beta']= 0.003
+#     args['print_freq']= 40
+#     args['init_weights'] = None
+#     args['epochs'] = 100
+#     args['class_map'] = [chr(a+97).upper() for a in list(range(23))]
 
-    # show args
-    print("##" * 50)
-    print(paint(f"Experiment: {model.experiment}", "blue"))
-    print(
-        paint(
-            f"[-] Using {torch.cuda.device_count()} GPU: {torch.cuda.is_available()}"
-        )
-    )
-    # commenting out below to save output space
-    #get_info_params(model)
-    #get_info_layers(model)
-    print("##" * 50)
+#     # show args
+#     print("##" * 50)
+#     print(paint(f"Experiment: {model.experiment}", "blue"))
+#     print(
+#         paint(
+#             f"[-] Using {torch.cuda.device_count()} GPU: {torch.cuda.is_available()}"
+#         )
+#     )
+#     # commenting out below to save output space
+#     #get_info_params(model)
+#     #get_info_layers(model)
+#     print("##" * 50)
 
-    statistics_path = './statistics/LOPO/{}/participant_{}/batch_size={}/statistics.pkl'.format(
-                model_name,u.name, args['batch_size'])
-    if not os.path.exists(os.path.dirname(statistics_path)):
-        os.makedirs(os.path.dirname(statistics_path))
-
-
-    # Statistics
-    # running outa memory somewhere here...
-    statistics_container = StatisticsContainer(statistics_path)
-    args['statistics'] = statistics_container
-
-    x_trainM_tensor = torch.from_numpy(np.array(X_trainM)).float()
-    x_trainA_tensor = torch.from_numpy(np.array(X_trainA)).float()
-    y_train_tensor = torch.from_numpy(np.array(y_train)).long()
-
-    print('x_trainM', np.shape(x_trainM_tensor))
-    x_testM_tensor = torch.from_numpy(np.array(X_testM)).float()
-    x_testA_tensor = torch.from_numpy(np.array(X_testA)).float()
-    y_test_tensor = torch.from_numpy(np.array(y_test)).long()
-
-    print('x_testM', np.shape(x_testM_tensor))
-    x_valM_tensor = torch.from_numpy(np.array(X_testM)).float()
-    x_valA_tensor = torch.from_numpy(np.array(X_testA)).float()
-    y_val_tensor = torch.from_numpy(np.array(y_test)).long()
-
-    print('x_valM', np.shape(x_valM_tensor))
-    train_data = TensorDataset(x_trainM_tensor, x_trainA_tensor, y_train_tensor)
-    test_data = TensorDataset(x_testM_tensor, x_testA_tensor, y_test_tensor)
-    val_data = TensorDataset(x_valM_tensor, x_valA_tensor, y_val_tensor)
-    print(np.shape(train_data))
-    # not getting this far!
+#     statistics_path = './Data/statistics/LOPO/{}/participant_{}/batch_size={}/statistics.pkl'.format(
+#                 model_name,u.name, args['batch_size'])
+#     if not os.path.exists(os.path.dirname(statistics_path)):
+#         os.makedirs(os.path.dirname(statistics_path))
 
 
-    # [STEP 4] train HAR models
-    model_train(model, train_data, val_data, args)
+#     # Statistics
+#     # running outa memory somewhere here...
+#     statistics_container = StatisticsContainer(statistics_path)
+#     args['statistics'] = statistics_container
 
-    # [STEP 5] evaluate HAR models
-    if not config_model['train_mode']:
-        config_model["experiment"] = "inference_LOPO"
-        model = create(model_name, config_model).cuda()
-    model_eval(model, test_data, args)
-    plotCNNStatistics(statistics_path, u)
+#     x_trainM_tensor = torch.from_numpy(np.array(X_trainM)).float()
+#     x_trainA_tensor = torch.from_numpy(np.array(X_trainA)).float()
+#     y_train_tensor = torch.from_numpy(np.array(y_train)).long()
 
-    del train_data, test_data, val_data, model, 
-file.close()
+#     print('x_trainM', np.shape(x_trainM_tensor))
+#     x_testM_tensor = torch.from_numpy(np.array(X_testM)).float()
+#     x_testA_tensor = torch.from_numpy(np.array(X_testA)).float()
+#     y_test_tensor = torch.from_numpy(np.array(y_test)).long()
+
+#     print('x_testM', np.shape(x_testM_tensor))
+#     x_valM_tensor = torch.from_numpy(np.array(X_testM)).float()
+#     x_valA_tensor = torch.from_numpy(np.array(X_testA)).float()
+#     y_val_tensor = torch.from_numpy(np.array(y_test)).long()
+
+#     print('x_valM', np.shape(x_valM_tensor))
+#     train_data = TensorDataset(x_trainM_tensor, x_trainA_tensor, y_train_tensor)
+#     test_data = TensorDataset(x_testM_tensor, x_testA_tensor, y_test_tensor)
+#     val_data = TensorDataset(x_valM_tensor, x_valA_tensor, y_val_tensor)
+#     print(np.shape(train_data))
+#     # not getting this far!
 
 
-plt.show()
+#     # [STEP 4] train HAR models
+#     model_train(model, train_data, val_data, args)
+
+#     # [STEP 5] evaluate HAR models
+#     if not config_model['train_mode']:
+#         config_model["experiment"] = "inference_LOPO"
+#         model = create(model_name, config_model).cuda()
+#     model_eval(model, test_data, args)
+#     plotCNNStatistics(statistics_path, u)
+
+#     del train_data, test_data, val_data, model, 
+# file.close()
 
 
-#print(np.shape(X_trainA), np.shape(X_testA), np.shape(y_train))
+# plt.show()
+
+
+# #print(np.shape(X_trainA), np.shape(X_testA), np.shape(y_train))

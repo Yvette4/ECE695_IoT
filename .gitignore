@@ -4,3 +4,8 @@ Report/*.log
 Report/*.out
 Report/*.run.xml
 Report/*.synctex.gz
+Original/Data/
+Data/
+Watch_App/RawData/*.csv
+Project/cameron_code/
+models/

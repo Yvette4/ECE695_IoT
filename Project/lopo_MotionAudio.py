@@ -1,8 +1,9 @@
 import time
+import sys
+sys.path.append('./libs/Sound-and-Wrist-Motion-for-Activities-of-Daily-Living-with-Smartwatches')
 from ParticipantLab import ParticipantLab as parti
 import numpy as np
 import tensorflow as tf
-import sys
 import pickle
 import os
 import copy
@@ -22,7 +23,7 @@ from scipy.fftpack import dct
 import _pickle as cPickle
 
 
-from models import *
+from models import AttendDiscriminate_MotionAudio_CNN14_Concatenate
 import torch
 torch.backends.cudnn.benchmark=True
 torch.manual_seed(1)
@@ -32,8 +33,9 @@ import torch.optim as optim
 import torch.utils.data
 from torch.utils.data import DataLoader
 from torch.utils.data import TensorDataset
-os.environ["CUDA_VISIBLE_DEVICES"]="1"
+# os.environ["CUDA_VISIBLE_DEVICES"]="0"
 from utils_ import plotCNNStatistics
+
 import random
 torch.backends.cudnn.deterministic = True
 random.seed(1)
@@ -55,7 +57,7 @@ from utils.utils_pytorch import (
     get_info_layers,
     init_weights_orthogonal,
 )
-from utils.utils_mixup import mixup_data, MixUpLoss
+from utils.utils_mixup import mixup_data, MixUpLoss, mixup_data_AudioMotion
 from utils.utils_centerloss import compute_center_loss, get_center_delta
 
 import warnings
@@ -93,7 +95,6 @@ def model_train(model, dataset, dataset_val, args):
 
     metric_best = 0.0
     start_time = time.time()
-
     for epoch in range(args['epochs']):
         print("--" * 50)
         print("[-] Learning rate: ", optimizer.param_groups[0]["lr"])
@@ -136,11 +137,12 @@ def model_train(model, dataset, dataset_val, args):
                 checkpoint, os.path.join(model.path_checkpoints, "checkpoint_best.pth")
             )
 
-        if epoch % 5 == 0:
-            torch.save(
-                checkpoint,
-                os.path.join(model.path_checkpoints, f"checkpoint_{epoch}.pth"),
-            )
+
+        # if epoch % 20 == 0:
+        #     torch.save(
+        #         checkpoint,
+        #         os.path.join(model.path_checkpoints, f"checkpoint_{epoch}.pth"),
+        #     )
 
         if args['lr_step'] > 0:
             scheduler.step()
@@ -167,16 +169,17 @@ def train_one_epoch(model, loader, criterion, optimizer, epoch, args):
     losses = AverageMeter("Loss")
     model.train()
 
-    for batch_idx, (data, target) in enumerate(loader):
+    for batch_idx, (data, data_a, target) in enumerate(loader):
         data = data.cuda()
+        data_a = data_a.cuda()
         target = target.view(-1).cuda()
 
         centers = model.centers
 
         if args['mixup']:
-            data, y_a_y_b_lam = mixup_data(data, target, args['alpha'])
+            data, data_a, y_a_y_b_lam = mixup_data_AudioMotion(data, data_a, target, args['alpha'])
 
-        z, logits = model(data)
+        z, logits = model(data, data_a)
 
         if args['mixup']:
             criterion = MixUpLoss(criterion)
@@ -219,6 +222,7 @@ def eval_one_epoch(model, loader, criterion, epoch, logger, args):
             z, logits = model(data,data_a)
             loss = criterion(logits, target.view(-1))
             losses.update(loss.item(), data.shape[0])
+
             probabilities = nn.Softmax(dim=1)(logits)
             _, predictions = torch.max(probabilities, 1)
 
@@ -227,8 +231,7 @@ def eval_one_epoch(model, loader, criterion, epoch, logger, args):
 
     y_true = np.concatenate(y_true, 0)
     y_pred = np.concatenate(y_pred, 0)
-    Y_True.extend(y_true)
-    Y_Pred.extend(y_pred)
+
     acc = 100.0 * metrics.accuracy_score(y_true, y_pred)
     fm = 100.0 * metrics.f1_score(y_true, y_pred, average="macro")
     rm = 100.0* metrics.recall_score(y_true, y_pred, average="macro")
@@ -243,7 +246,6 @@ def eval_one_epoch(model, loader, criterion, epoch, logger, args):
         logger.add_scalar("Pm", pm, epoch)
         logger.add_scalar("Fw", fw, epoch)
 
-    # cm = confusion_matrix(y_true, y_pred, labels=args['class_map'])
     if epoch % 50 == 0 or not args['train_mode']:
         plot_confusion(
             y_true,
@@ -266,7 +268,7 @@ def model_eval(model, dataset_test, args):
     if args['train_mode']:
         path_checkpoint = os.path.join(model.path_checkpoints, "checkpoint_best.pth")
     else:
-        path_checkpoint = os.path.join(f"./weights/checkpoint.pth")
+        path_checkpoint = os.path.join(f"./Data/weights/checkpoint.pth")
 
     checkpoint = torch.load(path_checkpoint)
     model.load_state_dict(checkpoint["model_state_dict"])
@@ -274,7 +276,7 @@ def model_eval(model, dataset_test, args):
 
     start_time = time.time()
 
-    loss_test, acc_test, fm_test, rm_test, pm_test, fw_test= eval_one_epoch(
+    loss_test, acc_test, fm_test, rm_test, pm_test, fw_test = eval_one_epoch(
         model, loader_test, criterion, -1, logger=None, args=args
     )
 
@@ -284,6 +286,7 @@ def model_eval(model, dataset_test, args):
             f"\tacc: {acc_test:.2f}(%)\tfm: {fm_test:.2f}(%)\trm: {rm_test:.2f}(%)\tpm: {pm_test:.2f}(%)\tfw: {fw_test:.2f}(%)"
         )
     )
+    results.writerow([str(args['participant']), str(pm_test), str(rm_test), str(fm_test), str(acc_test)])
 
     elapsed = round(time.time() - start_time)
     elapsed = str(datetime.timedelta(seconds=elapsed))
@@ -298,28 +301,31 @@ if __name__ == '__main__':
     hop = .5
 
     participants = []
+    # skip participant 1 - didn't have data for activity "H"
+    participants_to_use = [2, 3, 4, 5, 6]
 
 
-
-    if os.path.exists('../Data/rawAudioSegmentedData_window_' + str(win_size) + '_hop_' + str(hop) + '_Test.pkl'):
-        with open('../Data/rawAudioSegmentedData_window_' + str(win_size) + '_hop_' + str(hop) + '_Test.pkl', 'rb') as f:
+    if os.path.exists('./Data/rawAudioSegmentedData_window_' + str(win_size) + '_hop_' + str(hop) + '_Test.pkl'):
+        with open('./Data/rawAudioSegmentedData_window_' + str(win_size) + '_hop_' + str(hop) + '_Test.pkl', 'rb') as f:
             participants = pickle.load(f)
     else:
 
         start = time.time()
-        for j in range (1, P+1):
+        for j in participants_to_use:
             pname = str(j).zfill(2)
-            p = parti(pname, '../Data',win_size, hop, normalized = False)
+            folder = './Data/P' + str(j).zfill(2) + '/'
+            p = parti(pname, folder, win_size, hop, normalized = False)
             p.readRawAudioMotionData()
             participants.append(p)
             print('participant',j,'data read...')
         end = time.time()
         print("time for feature extraction: " + str(end - start))
 
-        with open('../Data/rawAudioSegmentedData_window_' + str(win_size) + '_hop_' + str(hop) + '_Test.pkl', 'wb') as f:
+        with open('./Data/rawAudioSegmentedData_window_' + str(win_size) + '_hop_' + str(hop) + '_Test.pkl', 'wb') as f:
             pickle.dump(participants, f)
 
 
+    ## set model_name to model you want to use 
     model_name = 'AttendDiscriminate_MotionAudio_CNN14_Concatenate'
     experiment = f'LOPO_{model_name}'
 
@@ -347,49 +353,113 @@ if __name__ == '__main__':
         "sample_rate": 22050
     }
 
+    results_path = './Data/performance_results/{}/{}/'.format(experiment,model_name)
+    if not os.path.exists(results_path):
+        os.makedirs(results_path)
+
+    file = open(results_path + 'performance_results.csv', "w")
+    results = csv.writer(file)
+    results.writerow(["Participant", "Precision", "Recall", "F-Score", "Accuracy"])
+
     args = copy.deepcopy(config_model)
-    Y_True, Y_Pred = [],[]
+
     for u in participants:
+                    
         print("participant : " + u.name)
         args['participant'] = u.name
         config_model['participant'] = u.name
+
+        # Avoid running out of memory: Find out ultimate size of training arrays
+        # Create empty array that size. Fill it in gradually using numpy "views"
+        num_X_trainM = np.shape(u.rawMdataX_s1)[0]    # Start the sum with the length of u sample1. Will be added at end
+        num_X_trainA = np.shape(u.rawAdataX_s1)[0]
+        for x in participants:
+            if x != u:
+                num_X_trainM += np.shape(x.rawMdataX_s1)[0]
+                num_X_trainM += np.shape(x.rawMdataX_s2)[0]
+                num_X_trainA += np.shape(x.rawAdataX_s1)[0]
+                num_X_trainA += np.shape(x.rawAdataX_s2)[0]
+
+        len_X_trainM = np.shape(u.rawMdataX_s1)[1]
+        width_X_trainM = np.shape(u.rawMdataX_s1)[-1]
+        len_X_trainA = np.shape(u.rawAdataX_s1)[-1]
+
+        X_trainM = np.empty((num_X_trainM, len_X_trainM, width_X_trainM))
+        X_trainA = np.empty((num_X_trainA, len_X_trainA))
+        y_train = np.zeros((0, 1))
+
+        # Insert sample data into X_train and y_train at appropriate locations
+        i_trainM = 0
+        i_trainA = 0
+        for x in participants:
+            if x != u:
+
+                print("Adding data for Participant: " + x.name)
+                f_trainM = i_trainM + np.shape(x.rawMdataX_s1)[0]
+                X_trainM[i_trainM:f_trainM] = x.rawMdataX_s1[:]
+                i_trainM = f_trainM
+                ##
+                f_trainM = i_trainM + np.shape(x.rawMdataX_s2)[0]
+                X_trainM[i_trainM:f_trainM] = x.rawMdataX_s2[:]
+                i_trainM = f_trainM
+                ##
+                f_trainA = i_trainA + np.shape(x.rawAdataX_s1)[0]
+                X_trainA[i_trainA:f_trainA] = x.rawAdataX_s1[:]
+                i_trainA = f_trainA
+                ##
+                f_trainA = i_trainA + np.shape(x.rawAdataX_s2)[0]
+                X_trainA[i_trainA:f_trainA] = x.rawAdataX_s2[:]
+                i_trainA = f_trainA
+                ##
+                y_train = np.vstack((y_train[:], x.rawdataY_s1))
+                y_train = np.vstack((y_train[:], x.rawdataY_s2))
+
+        X_trainM[i_trainM:] = u.rawMdataX_s1[:]
+        X_trainA[i_trainA:] = u.rawAdataX_s1[:]
+        y_train = np.vstack((y_train[:], u.rawdataY_s1))
+        
+        # labels = np.array(u.labels)
+        # X_testM = copy.deepcopy(u.rawMdataX_s2[:])
+        # y_test = copy.deepcopy(u.rawdataY_s2)
+        # X_testA= copy.deepcopy(u.rawAdataX_s2[:])
         
         labels = np.array(u.labels)
-        X_testA = copy.deepcopy(u.rawAdataX_s1[:])
-        X_testA = np.vstack((X_testA, u.rawAdataX_s2[:]))
-        y_test = np.vstack((u.rawdataY_s1, u.rawdataY_s2))
         X_testM = copy.deepcopy(u.rawMdataX_s1[:])
         X_testM = np.vstack((X_testM, u.rawMdataX_s2[:]))
+        y_test = np.vstack((u.rawdataY_s1, u.rawdataY_s2))
+
+        X_testA= copy.deepcopy(u.rawAdataX_s1[:])
+        X_testA= np.vstack((X_testA, u.rawAdataX_s2[:]))
         X_testA = X_testA[(y_test != 23)[:,0]]
+
+
         X_testM = X_testM[(y_test != 23)[:,0]]
+        X_testA = X_testA[(y_test != 23)[:,0]]
 
         y_test = y_test[y_test != 23]
 
+        X_trainM = X_trainM[(y_train != 23)[:,0]]
+        X_trainA = X_trainA[(y_train != 23)[:,0]]
 
-        # X_trainAcc = np.expand_dims(X_trainA[:,:,:3]/9.8, axis = 1)
-        # X_trainGyr = np.expand_dims(X_trainA[:,:,3:], axis = 1)
-
-        # X_testAcc = np.expand_dims(X_testA[:,:,:3]/9.8, axis = 1)
-        # X_testGyr = np.expand_dims(X_testA[:,:,3:], axis = 1)
+        y_train = y_train[y_train != 23]
 
 
         classes = np.unique(y_test).astype(int)
-        # 
-        # y_train = tf.keras.utils.to_categorical(y_train, num_classes=23, dtype='int32')
-        # y_test = tf.keras.utils.to_categorical(y_test, num_classes=23, dtype='int32')
-        
-        #import pdb; pdb.set_trace()
+
         torch.cuda.empty_cache()
 
         # [STEP 3] create HAR models
         if torch.cuda.is_available():
-            model = create(model_name, config_model).cuda()
+            model = create(model_name, config_model)
             torch.backends.cudnn.benchmark = True
             sys.stdout = Logger(
                 os.path.join(model.path_logs, f"log_main_{experiment}.txt")
             )
 
-        args['batch_size']= 64
+        print('GPU number: {}'.format(torch.cuda.device_count()))
+        model = model.cuda()
+
+        args['batch_size']= 8 #32 # YVETTE - checking if smaller value helps
         args['optimizer']= 'Adam'
         args['clip_grad']= 0
         args['lr']= 0.001
@@ -400,10 +470,10 @@ if __name__ == '__main__':
         args['lr_cent']= 0.001
         args['beta']= 0.003
         args['print_freq']= 40
-        args['init_weights'] = 'orthogonal'
-        args['epochs'] = 100
+        args['init_weights'] = None
+        # args['epochs'] = 100
+        args['epochs'] = 5 # YVETTE - for initial runs change this to 5
         args['class_map'] = [chr(a+97).upper() for a in list(range(23))]
-
 
         # show args
         print("##" * 50)
@@ -417,23 +487,48 @@ if __name__ == '__main__':
         get_info_layers(model)
         print("##" * 50)
 
-        x_testA_tensor = torch.from_numpy(np.array(X_testA)).float()
-        x_testM_tensor = torch.from_numpy(np.array(X_testM)).float()
+        statistics_path = './Data/statistics/LOPO/{}/participant_{}/batch_size={}/statistics.pkl'.format(
+                    model_name,u.name, args['batch_size'])
+        if not os.path.exists(os.path.dirname(statistics_path)):
+            os.makedirs(os.path.dirname(statistics_path))
 
+
+        # Statistics
+        statistics_container = StatisticsContainer(statistics_path)
+        args['statistics'] = statistics_container
+
+        x_trainM_tensor = torch.from_numpy(np.array(X_trainM)).float()
+        x_trainA_tensor = torch.from_numpy(np.array(X_trainA)).float()
+        y_train_tensor = torch.from_numpy(np.array(y_train)).long()
+
+        x_testM_tensor = torch.from_numpy(np.array(X_testM)).float()
+        x_testA_tensor = torch.from_numpy(np.array(X_testA)).float()
         y_test_tensor = torch.from_numpy(np.array(y_test)).long()
 
+        x_valM_tensor = torch.from_numpy(np.array(X_testM)).float()
+        x_valA_tensor = torch.from_numpy(np.array(X_testA)).float()
+        y_val_tensor = torch.from_numpy(np.array(y_test)).long()
+
+        train_data = TensorDataset(x_trainM_tensor, x_trainA_tensor, y_train_tensor)
         test_data = TensorDataset(x_testM_tensor, x_testA_tensor, y_test_tensor)
+        val_data = TensorDataset(x_valM_tensor, x_valA_tensor, y_val_tensor)
+
+
+        # [STEP 4] train HAR models
+        model_train(model, train_data, val_data, args)
+
+        # [STEP 5] evaluate HAR models
+        if not config_model['train_mode']:
+            config_model["experiment"] = "inference_LOPO"
+            model = create(model_name, config_model).cuda()
         model_eval(model, test_data, args)
-    plot_confusion(Y_True, Y_Pred, None, 0, normalize=True, cmap=plt.cm.Blues, class_map=args['class_map'])
+        plotCNNStatistics(statistics_path, u)
+        del train_data, test_data, val_data, model, 
+
+    file.close()
+
 
     plt.show()
 
-
-
-
-
-
-
-#print(np.shape(X_trainA), np.shape(X_testA), np.shape(y_train))
 
 
