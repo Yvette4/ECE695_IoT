@@ -11,7 +11,7 @@ For this project we tested on 2 separate Samsung watches, both running on Tizen 
 The watch is primarily worn on the dominant hand, i.e. right handed people wear watch on their right hand. Before performing an activity, connect the watch to the Tizen IDE, once it is loaded open a voice recorder app on a nearby phone.
 - Clear the log in the Device Manger
 - Start the voice recording and wait 5 seconds then press the button on watch to start data collection
-- Perform the activity of interest for 20 seconds (until voice recorder shows 25 seconds have elapsed)
+- Perform the activity of interest for 30 seconds (until voice recorder shows 35 seconds have elapsed)
 - Click the button on the watch to stop data collection, then stop the voice recorder.
 - Export the log and save as "activity_sessionNum.txt"
 - Save the audio recording with the same name
