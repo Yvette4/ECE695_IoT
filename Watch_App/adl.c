@@ -299,7 +299,7 @@ _btn_start_collection_cb(void *data, Evas_Object *btn, void *ev EINA_UNUSED)
 		{
 			// 20 ms for 50 Hz (similar to what the paper had)
 		    if (sensor_create_listener(ad->accelerometer, &ad->acc_listener) == SENSOR_ERROR_NONE
-		        && sensor_listener_set_event_cb(ad->acc_listener, 100, accelerometer_event_callback, NULL) == SENSOR_ERROR_NONE)
+		        && sensor_listener_set_event_cb(ad->acc_listener, 20, accelerometer_event_callback, NULL) == SENSOR_ERROR_NONE)
 		    {
 		        if (sensor_listener_start(ad->acc_listener) == SENSOR_ERROR_NONE)
 		        {
@@ -312,7 +312,7 @@ _btn_start_collection_cb(void *data, Evas_Object *btn, void *ev EINA_UNUSED)
 		if (sensor_get_default_sensor(SENSOR_GYROSCOPE, &ad->gyroscope) == SENSOR_ERROR_NONE)
 		{
 		    if (sensor_create_listener(ad->gyroscope, &ad->gyro_listener) == SENSOR_ERROR_NONE
-		        && sensor_listener_set_event_cb(ad->gyro_listener, 100, gyroscope_event_callback, NULL) == SENSOR_ERROR_NONE)
+		        && sensor_listener_set_event_cb(ad->gyro_listener, 20, gyroscope_event_callback, NULL) == SENSOR_ERROR_NONE)
 		    {
 		        if (sensor_listener_start(ad->gyro_listener) == SENSOR_ERROR_NONE)
 		        {
