@@ -21,10 +21,13 @@ The watch is primarily worn on the dominant hand, i.e. right handed people wear 
 Due to time constraints we only looked at the following activities
 - Writing
 - Typing on keyboard
-- Frying
+- Brushing teeth
 - Sweeping
+- Washing Dishes
 
-To investigate the effects of background noise and watch placement, for the first data collection session we had some music playing in the background, and for the second data collection session the watches were worn on the passive hand.
+To investigate the effects of background noise and watch placement each of the two particpants had a session in which noise was added.
+- Participant 1 Session 2: music playing in the background
+- Participant 2 Session 2: watch worn on passive hand
 
 ## Post processing of data
 
