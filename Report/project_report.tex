@@ -8,7 +8,7 @@
 \usepackage{textcomp}
 \usepackage{xcolor}
 \def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
-    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+		T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
 
 \usepackage{hyperref}
 \usepackage{biblatex} 
@@ -21,153 +21,238 @@
 \graphicspath{{./pix/}} % put all your figures here.
 
 \begin{document}
-
-\title{Recognizing Activities of Daily Living Using Audio and IMU Data from Commodity Smartwatches
-}
-
-\author{
-\IEEEauthorblockN{Yvette Espinoza}
-\IEEEauthorblockA{\textit{Department of ECE} \\
-\textit{Purdue University}\\
-Los Angeles, CA \\
-yespinoz@purdue.edu}
-
-\and
-\IEEEauthorblockN{Cameron Johnson}
-\IEEEauthorblockA{\textit{Department of ECE} \\
-\textit{Purdue University}\\
-Asheville, NC \\
-john3096@purdue.edu}
-
-\and
-\IEEEauthorblockN{Jahangir Mollah}
-\IEEEauthorblockA{\textit{Department of ECE} \\
-\textit{Purdue University}\\
-Seattle, WA \\
-jmollah@purdue.edu}
-}
-
-\maketitle
-
-\begin{abstract}
-Human activity recognition is applicable to healthcare, but there are limitations on devices that can be used.
-The popularity of smart devices allow for comfort while also providing the data necessary to expand enable activity recognition.
-In this project, smartwatches will be used to recognize activities of daily living.
-\end{abstract}
-
-%\begin{IEEEkeywords}
-%component, formatting, style, styling, insert
-%\end{IEEEkeywords}
-
-\section{Introduction}
-
-Early research in activity detection aimed at finding differences in signal characteristics of the collected accelerometer data, and determining the ideal sensor placement. 
-In \cite{2011_Sensor_Positioning}, activities were grouped together into four categories by levels of physical activity, and sensors were placed throughout the body to determine the best location for each of the categories.
-Their results found each category performed best with a different sensor location. A sensor placed on the waist was best at detecting low level activities like eating, while a sensor on the chest or wrist was best at medium level activities like housework.
-
-While different sensor placement based on an activity would be ideal for performance, it would not be practical for widespread use.
-An accelerometer by itself is not enough to determine an activity. More context is needed and different sensors on the body are an inconvenience for users. 
-Human activity recognition is widely used in healthcare applications, with the elderly being a large part of the user demographics \cite{2018_Robust_Activity}, to suit their needs the data collection would require an unobtrusive setup.
-To address the inconvenience of full body sensors and the need for context, \cite{2012_WristSense} used a wrist-worn device equipped with an accelerometer and camera to recognize daily activities. 
-The camera provided context for the activities, and the accelerometer provided characteristics of the body movement associated with different activities, both of which were used to train a model to predict the activity.
-
-The advancement in smart devices, like smartwatches and conversational assistants, allow for more sensors in a user friendly device.
-Conversational assistants, like a Google Home, and smartwatches are used to train a model to recognize activities of daily living \cite{2021_Ok_Google} \cite{2022_Leveraging_sound}.
-
-%\subsection{Machine Learning Algorithms}
-% TODO - talk about the machine learning advances --> smart devies allow for more data collection, which allow for better ML models and classifiers %
-
-
-\subsection{Motivation}
-Audio monitoring can also be used to detect hazardous situations such as loud noises, falls, or emergencies. By integrating audio analysis into a smartwatch, users can be alerted to potential dangers in real-time, providing an added layer of safety.
-
-Human activity recognition has potential applications that can be leveraged in healthcare, dietary monitoring, and weight management
-
-We propose a research project, recognizing activities of daily living using the IMU and audio data from a commodity smartwatch. 
-We will be following existing research performed in \cite{2022_Leveraging_sound}. 
-
-\section{Methodology}
-Our process will involve conducting experiments wearing a smartwatch and performing a variety of basic activities such as writing, brushing teeth, and washing hands. We will record IMU data and audio data using the mic on the watch as input to a deep learning model which fuses the inertial data and acoustic data to determine the activity being performed, shown in Figure \ref{fig: Architecture_of_Inertial_and_Acoustic_Models}. Recognizing activities of daily living using inertial data has been the focus of a number of studies in the recent past, but fewer studies have included acoustic data in the model. We believe using both types will result in more accurate recognition. Some activities such as writing are more easily captured using inertial data while other activities such as cutting paper are more captured using acoustic data.  Smart watches prove especially practical for recording both types of data because the mic is at close proximity to the hand which is often close to the activity being performed and the IMU records useful motion on the wrist as opposed to a smartphone in the pocket or strapped to the chest.
-
-\begin{figure}[h]
-    \centering
-    \includegraphics[scale=0.50]{Architecture_of_Inertial_and_Acoustic_Models}
-    \caption{Architecture of Inertial and Acoustic Models, provided by \cite{2022_Leveraging_sound}}
-    \label{fig: Architecture_of_Inertial_and_Acoustic_Models}
-\end{figure}
-
-\subsection{Hardware Setup}
-The authors of \cite{2022_Leveraging_sound} used the same watch for all of their experiments. They used a Fossil Gen 4, Android Wear OS 2.21, Custom application collects data synchronously and stores locally on watch. Max inertial sensor samples at rate 50 Hz, acoustic sampled at 22.05 KHz. We will be using different watch manufacturers in our experiment to ensure generic compatibility.
-
-\subsection{Original Experimental Setup and Results}
-The paper that we follow conducted two generally different experiments. In the first experiment, an individual performs a series of activities for 30 seconds wearing a Fossil smartwatch which records inertial and acoustic data. There is a clear distinction between each activity and the watches are programmed to listen at frequent intervals. The authors implemented a variety of machine learning models to recognize the activity in this experiment with an accuracy of 94.3. The second experiment implements a less controlled, more realistic setting.
-One limitation of this paper was that their not controlled experiment had poor results due to noise and mislabeling of activities due to the setup.
-Since their experiment was not controlled, not all the activities they were interested in were performed, in some cases activities overlapped, and combined with a limited sample size resulted in misclassifications.
-
-For our project we plan to expand our sample size and have a more controlled environment.
-We intend to focus on recognizing an activity on command, in a more controlled environment where we set rules to prevent the noise and mislabeling seen in the original paper.
-
-% TODO: [Describe] Accuracy of 55.8.
-
-\subsection{Schedule}
-The project was divided into four phases.
-More details on due dates and deliverables for each phase are provided in Table \ref{tab: Schedule}.
-
-\begin{table}[htbp]
-	\caption{Schedule}
-	\begin{center}
-		\begin{tabular}{| m{1.2cm} | m{4cm} | m{1.2cm} |}
-			\hline
-			\textbf{Phase} & \textbf{Activities} & \textbf{Due Date} \\
-			\hline
-			Planning & 
-			\begin{itemize}
-				\item Identify existing research data
-				\item Identify available hardware
-				\item Plan for how to capture and store data
-				\item Identify how to process data
-				\item Identify machine learning classification models
-			\end{itemize} &
-			March 18 \\
-			\hline
-			
-			Data Collection & 
-			\begin{itemize}
-				\item Capture and process raw data
-				\item Capture audio data at all times
-				\item Review existing research data
-				\item Get volunteers for experiments
-			\end{itemize} & 
-			April 1 \\
-			\hline
-			
-			Analysis & 
-			\begin{itemize}
-				\item Fuse data collected from different sources
-				\item Label data collected
-				\item Run the classification models
-				\item Analyze results
-			\end{itemize} & 
-			April 15 \\
-			\hline
-			
-			Finalize Report & 
-			\begin{itemize}
-				\item Write up final report
-				\item Create presentation
-			\end{itemize} & 
-			April 22 \\
-			\hline
-		\end{tabular}
-		\label{tab: Schedule}
-	\end{center}
-\end{table}
-
-\section*{Acknowledgment}
-
-Paper we are implementing \cite{2022_Leveraging_sound}.
-
-\nocite{*}
-\printbibliography
-
+	
+	\title{Recognizing Activities of Daily Living Using Audio and IMU Data from Commodity Smartwatches
+	}
+	
+	\author{
+		\IEEEauthorblockN{Yvette Espinoza}
+		\IEEEauthorblockA{\textit{Department of ECE} \\
+			\textit{Purdue University}\\
+			Los Angeles, CA \\
+			yespinoz@purdue.edu}
+		
+		\and
+		\IEEEauthorblockN{Cameron Johnson}
+		\IEEEauthorblockA{\textit{Department of ECE} \\
+			\textit{Purdue University}\\
+			Asheville, NC \\
+			john3096@purdue.edu}
+		
+		\and
+		\IEEEauthorblockN{Jahangir Mollah}
+		\IEEEauthorblockA{\textit{Department of ECE} \\
+			\textit{Purdue University}\\
+			Seattle, WA \\
+			jmollah@purdue.edu}
+	}
+	
+	\maketitle
+	
+	\begin{abstract}
+		Human activity recognition is applicable to healthcare, but there are limitations on devices that can be used.
+		The popularity of smart devices allow for comfort while also providing the data necessary to expand enable activity recognition.
+		Smart watches prove especially practical for recording both acoustic and inertial data because the mic is at close proximity to the hand which is often close to the activity being performed and the IMU records useful motion on the wrist as opposed to a smartphone in the pocket or strapped to the chest.
+		This project builds on previous research and focuses on the effects of acoustic and motion noise on recognizing the activities of daily living.
+		
+	\end{abstract}
+	
+	%\begin{IEEEkeywords}
+	%component, formatting, style, styling, insert
+	%\end{IEEEkeywords}
+	
+	\section{Introduction}
+	
+	Early research in activity detection aimed at finding differences in signal characteristics of the collected accelerometer data, and determining the ideal sensor placement. 
+	In \cite{2011_Sensor_Positioning}, activities were grouped together into four categories by levels of physical activity, and sensors were placed throughout the body to determine the best location for each of the categories.
+	Their results found each category performed best with a different sensor location. A sensor placed on the waist was best at detecting low level activities like eating, while a sensor on the chest or wrist was best at medium level activities like housework.
+	
+	While different sensor placement based on an activity would be ideal for performance, it would not be practical for widespread use.
+	An accelerometer by itself is not enough to determine an activity. More context is needed and different sensors on the body are an inconvenience for users. 
+	Human activity recognition is widely used in healthcare applications, with the elderly being a large part of the user demographics \cite{2018_Robust_Activity}, to suit their needs the data collection would require an unobtrusive setup.
+	To address the inconvenience of full body sensors and the need for context, \cite{2012_WristSense} used a wrist-worn device equipped with an accelerometer and camera to recognize daily activities. 
+	The camera provided context for the activities, and the accelerometer provided characteristics of the body movement associated with different activities, both of which were used to train a model to predict the activity.
+	
+	The advancement in smart devices, like smartwatches and conversational assistants, allow for more sensors in a user friendly device.
+	Conversational assistants, like a Google Home, and smartwatches are used to train a model to recognize activities of daily living \cite{2021_Ok_Google} \cite{2022_Leveraging_sound}.
+	
+	%\subsection{Machine Learning Algorithms}
+	% TODO - talk about the machine learning advances --> smart devies allow for more data collection, which allow for better ML models and classifiers %
+	
+	\subsection{Applications}
+	Audio monitoring can also be used to detect hazardous situations such as loud noises, falls, or emergencies. By integrating audio analysis into a smartwatch, users can be alerted to potential dangers in real-time, providing an added layer of safety.
+	
+	Human activity recognition has potential applications that can be leveraged in healthcare, dietary monitoring, and weight management
+	
+	We propose a research project, recognizing activities of daily living using the IMU and audio data from a commodity smartwatch. 
+	We will be following existing research performed in \cite{2022_Leveraging_sound}, but adding extra noise while collecting data to better understand the effects of such noise in recognizing activities.
+	
+	\subsection{Motivation}
+	The researchers of the original paper conducted two generally different experiments. In the first experiment, an individual performs a series of activities for 30 seconds wearing a Fossil smartwatch which records inertial and acoustic data. There is a clear distinction between each activity and the watches are programmed to listen at frequent intervals. The authors implemented a variety of machine learning models to recognize the activity in this experiment with an accuracy of 94.3. The second experiment implements a less controlled, more realistic setting.
+	One limitation of this paper was that their not controlled experiment, the in-the-wild, had poor results due to background noise, mislabeling of activities due to the setup, and inconsistencies in how activities were performed.
+	Since their in-the-wild experiment was not controlled, not all the activities they were interested in were performed, in some cases activities overlapped, and combined with a limited sample size resulted in misclassifications.
+	
+	The goal for this project is to expand on the previous work and better understand some of the limitations the researchers encountered.
+	Since the main limitation was the performance degradation for their in-the-wild study, this project aims to have a semi-controlled environment, or semi-wild experiment, where activities are pre-defined but the noise from the in-the-wild study is added. 
+	The following are the areas of interest: measure the effect of wearing the watch on passive instead of dominant hand, measure the effect of background noise while performing activities, and determine if more participants would lead to more accurate results.
+	
+	\section{Related Work}
+	YVETTE - add more on watch as secondary sensing device, problems with wearing watch on opposite hand, problems with background noise in acoustic sensing
+	
+	\begin{figure}[h]
+		\centering
+		\includegraphics[scale=0.50]{Architecture_of_Inertial_and_Acoustic_Models}
+		\caption{Architecture of Inertial and Acoustic Models, provided by \cite{2022_Leveraging_sound}}
+		\label{fig: Architecture_of_Inertial_and_Acoustic_Models}
+	\end{figure}
+	
+	\section{AI/ML models (short section on how the data was used)}
+	
+	\section{Methodology}
+	For the data collection, only a subset of the original activities were performed: writing, typing on keyboard, brushing teeth, sweeping, and washing dishes.
+	These activities were selected since they primarily rely on one measurement for detection, i.e. washing dishes is more easily identified by its acoustic data while writing is more identifiable by its motion data.
+	A smartwatch was worn to collect the acceleromenter and gyroscope data, while a phone was set nearby to collect the acoustic data.
+	The motion and acoustic data were the inputs to a deep learning model which fuses the inertial data and acoustic data to determine the activity being performed, shown in Figure \ref{fig: Architecture_of_Inertial_and_Acoustic_Models}.
+	
+	\subsection{Hardware Setup}
+	In the original paper the authors used the same watch, the Fossil Gen 4, for all of their experiments \cite{2022_Leveraging_sound}.
+	Their custom application, which collected motion and acoustic data, was developed on Android Wear OS 2.11, with inertial sampling at 50 Hz and acoustic sampling at 22.05 kHz.
+	
+	For this project two separate Samsung Galaxy watches were used, with a custom app developed on Tizen OS 5.5.
+	The inertial data was also sampled at 50 Hz, but since the smartphone recorded at 44.1 kHz, it was downsampled in post processing to match the rate of the original paper.
+	
+	\subsection{Watch App}
+	The original intention was to collect both motion and acoustic data from the smartwatch, but while developing the app there were problems with the writing to the watch's file system.
+	The main problem seemed to be with the permissions configured on the native c app.
+	Based on the available documentation, those problems could be addressed by switching to a web app instead, but due to lack of experience with web apps and time constraints, instead of storing the collected data to a file on the watch the inertial data was collected from the debug log and a smartphone was used to collect the acoustic data.
+	
+	The final app only had one button to start and stop the motion data collection, shown in Figure \ref{fig: watch_app_picture}.
+	
+	\begin{figure}[h]
+		\centering
+		\includegraphics[scale=0.75]{watch_app_picture}
+		\caption{Watch app deployed on emulator}
+		\label{fig: watch_app_picture}
+	\end{figure}
+	
+	\subsection{Schedule}
+	The project was divided into four phases.
+	More details on due dates and deliverables for each phase are provided in Table \ref{tab: Schedule}.
+	
+	\begin{table}[htbp]
+		\caption{Schedule}
+		\begin{center}
+			\begin{tabular}{| m{1.2cm} | m{4cm} | m{1.2cm} |}
+				\hline
+				\textbf{Phase} & \textbf{Activities} & \textbf{Due Date} \\
+				\hline
+				Planning & 
+				\begin{itemize}
+					\item Identify existing research data
+					\item Identify available hardware
+					\item Plan for how to capture and store data
+					\item Identify how to process data
+					\item Identify machine learning classification models
+				\end{itemize} &
+				March 18 \\
+				\hline
+				
+				Data Collection & 
+				\begin{itemize}
+					\item Capture and process raw data
+					\item Capture audio data at all times
+					\item Review existing research data
+					\item Get volunteers for experiments
+				\end{itemize} & 
+				April 1 \\
+				\hline
+				
+				Analysis & 
+				\begin{itemize}
+					\item Fuse data collected from different sources
+					\item Label data collected
+					\item Run the classification models
+					\item Analyze results
+				\end{itemize} & 
+				April 15 \\
+				\hline
+				
+				Finalize Report & 
+				\begin{itemize}
+					\item Write up final report
+					\item Create presentation
+				\end{itemize} & 
+				May 6 \\
+				\hline
+			\end{tabular}
+			\label{tab: Schedule}
+		\end{center}
+	\end{table}
+	
+	\section{Data Collection}
+	The data collection was performed using a debug version of the watch app, which allowed us to access the debug log with the accelerometer and gyroscope data.
+	Participants had two data collection sessions.
+	For the first session the watch was worn on the dominant hand and there was no background noise, and for the second session either the watch was worn on the passive hand or background music was played while performing the activities.
+	A phone was placed next to the participant during data collection to capture the activities acoustic data.
+	Figure \ref{fig: data_collection_steps} shows the instructions for how to collect data. 
+	Figure \ref{fig: DeviceManager} shows the Tizen Device Manager from which the debug log was exported.
+	
+	\begin{figure}[h]
+		\centering
+		\includegraphics[scale=0.70]{data_collection_steps}
+		\caption{Data collection steps provided to the participants}
+		\label{fig: data_collection_steps}
+	\end{figure}
+	
+	\begin{figure}[h]
+		\centering
+		\includegraphics[scale=0.60]{DeviceManager}
+		\caption{Example of how to clear and export the debug log}
+		\label{fig: DeviceManager}
+	\end{figure}
+	
+	\subsection{Data Post-processing}
+	To align the acoustic and inertial data, the first and last 5 seconds of the audio file were removed.
+	The next step was to downsample the recordings, since the smartphones sampled at 44.1 kHz while the original paper sampled at 22.05 kHz.
+	For the inertial data, the debug logs were parsed and only timestamps that collected both gyroscope and accelerometer data were used to generate the final csv.
+	
+	The final step was to rename the files and add them to the same file structure as used by the original researchers.
+	% YVETTE - talk more about inference charts here... how we supplement the data for missing activities using other participants sessions
+	
+	\section{Results}
+	\subsection{Running the original models}
+	TODO - discuss modifications needed to run their original models
+	
+	\subsection{Number of participants}
+	
+	\section{Challenges}
+	There were three main challenges encountered while working on this project. 
+	\subsection{Activity Selection}
+	The first challenge was selecting the reduced activity list to analyze for the project.
+	The original motivation behind the project was to apply the models and focus on detecting digital media usage, which is one of the applications for activity detection. 
+	Previous research showed the controlled environment results were accurate in detecting the different activities, but we found our semi-wild results were similar to the uncontrolled results, where differentiating between the different phone activities, typing on phone and browsing on phone, was difficult.
+	The focus then became measuring the effect of noise that was causing the degraded performance between the controlled and uncontrolled experiments.
+	
+	
+	\subsection{Data Collection}
+	The app development was a major challenge, mostly because none of the team members had any app development experience.
+	As previously mentioned, the original plan was for the watch to collect and locally store both acoustic and inertial data, and the files would later be moved from the watch to a computer.
+	The older Samsung watches that were used had Tizen OS, and because it is not as popular as WearOS, there was a lack useful documentation while attempting to troubleshoot.
+	Tizen OS has been replaced by WearOS in the newer Samsung watches, so future research shouldn't have these same problems.
+	
+	\subsection{Running the original models}
+	The original models had to be modified before they could be used. 
+	Due to their complexity and memory requirements, only one member was able to get them to fully run.
+	The weights were saved after each new run, which allowed the other members to continue work, but there was that added delay before more analysis could be conducted.
+	
+	\section{Conclusion}
+	
+	
+	\section*{Acknowledgment}
+	
+	Paper we are implementing \cite{2022_Leveraging_sound}.
+	
+	\nocite{*}
+	\printbibliography
+	
 \end{document}
