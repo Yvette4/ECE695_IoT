@@ -90,14 +90,22 @@
 	\subsection{Motivation}
 	The researchers of the original paper conducted two generally different experiments. In the first experiment, an individual performs a series of activities for 30 seconds wearing a Fossil smartwatch which records inertial and acoustic data. There is a clear distinction between each activity and the watches are programmed to listen at frequent intervals. The authors implemented a variety of machine learning models to recognize the activity in this experiment with an accuracy of 94.3. The second experiment implements a less controlled, more realistic setting.
 	One limitation of this paper was that their not controlled experiment, the in-the-wild, had poor results due to background noise, mislabeling of activities due to the setup, and inconsistencies in how activities were performed.
-	Since their in-the-wild experiment was not controlled, not all the activities they were interested in were performed, in some cases activities overlapped, and combined with a limited sample size resulted in misclassifications.
+	Since their in-the-wild experiment was not controlled, not all the activities they were interested in were performed, in some cases activities overlapped, and combined with a limited sample size resulted in misclassifications\cite{2022_Misclassifications}.
 	
 	The goal for this project is to expand on the previous work and better understand some of the limitations the researchers encountered.
 	Since the main limitation was the performance degradation for their in-the-wild study, this project aims to have a semi-controlled environment, or semi-wild experiment, where activities are pre-defined but the noise from the in-the-wild study is added. 
-	The following are the areas of interest: measure the effect of wearing the watch on passive instead of dominant hand, measure the effect of background noise while performing activities, and determine if more participants would lead to more accurate results.
+	The following are the areas of interest: measure the effect of wearing the watch on a passive instead of dominant hand, measure the effect of background noise while performing activities, and determine if more participants would lead to more accurate results.
 	
 	\section{Related Work}
-	YVETTE - add more on watch as secondary sensing device, problems with wearing watch on opposite hand, problems with background noise in acoustic sensing
+	\subsection{Addressing background noise}
+	Research on sound classification 
+	A recent survey of hard of hearing people found that smartwatches, instead of smartphones, are the preferred device for sound awareness due to their social acceptability and support for both visual and haptic feedback \cite{2020_SoundWatch}.
+	Due to this demand, smartwatches are becoming more popular in sound classification research, but there are still limitations on performance due to acoustic variations, or background noise.
+	
+	One study measured the effect of background noise on speech detection and found that a noisy environment caused performance to drop by about 20 \% \cite{2002_Content_Analysis}.
+	Their proposed solution to the performance degradation was to use new features, which did improve performance.
+	
+	Other studies suggested having a user-centred data collection, where the user would record the same activity of interest in different scenarios, which would then be used to train a model to detect that activity \cite{2016_Personalizable} \cite{2020_SoundWatch}.
 	
 	\begin{figure}[h]
 		\centering
@@ -106,12 +114,22 @@
 		\label{fig: Architecture_of_Inertial_and_Acoustic_Models}
 	\end{figure}
 	
-	\section{AI/ML models (short section on how the data was used)}
+	\section{Machine Learning models}
+	Classical machine learning models such as Random Forest, Naive Bayes, and AdaBoost have been used in previous studies and prove to be effective in human activity recognition, but they rely on heuristic handcrafted feature extraction. The authors of \cite{2022_Leveraging_sound} experimented with two different deep neural network models and tried different fusion methods of the acoustic and motion data.  These deep human activity recognition models allow input of raw sensory data captured by the smart watch. The motion and acoustic data are trained separately and then fused using a variety of techniques.
+	
+	\subsection{Inertial Model}
+	One of the models used to classify inertial data is called DeepConvLSTM and is based on convolutional and LSTM recurrent units. The other model is called Attend and Discriminate and proves to be more effective. This framework incorporates cross-channel self-attention and temporal attention. Both gyroscope and accelerometer data are concatenated before processing through convolutional layers to learn the interaction between the two. The resulting feature maps pass through a recurrent neural network to model temporal dynamics.
+	
+	\subsection{Acoustic Model}
+	Convolutional neural networks are used to classify the audio data. These networks are applied to log-mel spectrograms which have been extracted from the audio signals. The authors find a CNN architecture they refer  to as CNN14 comprised of six convolutional blocks consisting of two convolutional layers and intermediary average pooling layers.
+	
+	\subsection{Fusion Methods}
+	The inertial and acoustic data need to be incorporated together. The model applies an aggregation method which concatenates the feature maps. There were other methods such as score-level fusion, but they did not perform as well. The concatenated feature maps are followed by a single classification head and joint training of both acoustic and inertial networks.
 	
 	\section{Methodology}
-	For the data collection, only a subset of the original activities were performed: writing, typing on keyboard, brushing teeth, sweeping, and washing dishes.
+	For the data collection, only a subset of the original activities was performed: writing, typing on a keyboard, brushing teeth, sweeping, and washing dishes.
 	These activities were selected since they primarily rely on one measurement for detection, i.e. washing dishes is more easily identified by its acoustic data while writing is more identifiable by its motion data.
-	A smartwatch was worn to collect the acceleromenter and gyroscope data, while a phone was set nearby to collect the acoustic data.
+	A smartwatch was worn to collect the accelerometer and gyroscope data \cite{2020_Accelerometer_and_Gyroscope}, while a phone was set nearby to collect the acoustic data.
 	The motion and acoustic data were the inputs to a deep learning model which fuses the inertial data and acoustic data to determine the activity being performed, shown in Figure \ref{fig: Architecture_of_Inertial_and_Acoustic_Models}.
 	
 	\subsection{Hardware Setup}
@@ -217,21 +235,55 @@
 	For the inertial data, the debug logs were parsed and only timestamps that collected both gyroscope and accelerometer data were used to generate the final csv.
 	
 	The final step was to rename the files and add them to the same file structure as used by the original researchers.
-	% YVETTE - talk more about inference charts here... how we supplement the data for missing activities using other participants sessions
+	Since only a subset of the original activities were performed, audio and motion data from other participants were used to create a full activity set that would be ready to test the models pre-trained on the available datasets.
 	
 	\section{Results}
 	\subsection{Running the original models}
-	TODO - discuss modifications needed to run their original models
+	Although the machine learning models are publicly available, they required significant modification. The reason for these changes are mostly due to using different equipment. In order to increase our compute power, we tailored the model to use Google Colab which can run independently from our machines and employs more powerful hardware. In doing so, the pre-processing and training methods were still crashing due to insufficient memory. Specifically, the program stacked the audio and inertial data for all participants into arrays using a numpy method which required keeping the entire array in memory. We reconfigured the code to use numpy views to combine all of the data which proved much more efficient and ultimately cut the memory requirement in half.
+	Other modifications to the model included changing plotting methods and various function parameters most likely due to the authors employing outdated libraries.
 	
 	\subsection{Number of participants}
+	We wanted to verify whether adding more training data was likely to improve the accuracy of the model. To do this, we ran the model using different numbers of participants and recorded the final test accuracy to evaluate whether the improvement starts to decrease. Figure \ref{fig: f-score_vs_participants} shows the promise of increased accuracy when we add more participant training data.
+	Figure \ref{fig: Original_Confusion_Matrix} shows the confusion matrix for the original model trained on all the available semi-naturalistic data.
+	
+	\begin{figure}[h]
+		\centering
+		\includegraphics[scale=0.60]{fscore_num_p.png}
+		\caption{F-score for training on increasing amount of participants}
+		\label{fig: f-score_vs_participants}
+	\end{figure}
+	
+	\begin{figure}[h]
+		\centering
+		\includegraphics[scale=0.60]{Original_Confusion_Matrix}
+		\caption{Confusion matrix for model trained on Semi-Naturalistic dataset}
+		\label{fig: Original_Confusion_Matrix}
+	\end{figure}
+	
+	\subsection{Inference on trial data}
+	To better define the data collection process a trial run was conducted where only three activities were performed: writing, typing and wiping the table.
+	Each data collection lasted 15 seconds, and motion data was sampled at 10 Hz instead of 50 Hz as in the original paper.
+	After post-procesing, the data was fed into a model that was pre-trained with the original dataset, the model output is shown in the Figure \ref{fig: Our_data_inference} confusion matrix.
+	
+	\begin{figure}[h]
+		\centering
+		\includegraphics[scale=0.70]{Our_data_inference}
+		\caption{Confusion matrix for trial data run from model trained with semi-naturalistic dataset}
+		\label{fig: Our_data_inference}
+	\end{figure}
+	
+	On the confusion matrix the left side indicates the input activity, and the bottom shows the predicted activity, with the three activities performed highlighted: writing (A), typing (D), wiping table (J). 
+	The activities were all labeled incorrectly, writing and typing were mistaken for brushing hair (K) and wiping table was mistaken for scratching (I).
+	After reviewing the results, the collection time was increased to 30 seconds, and the motion sampling rate was changed to 50 Hz. 
+	Due to time constraints the updated collection procedure was not able to be tested.
 	
 	\section{Challenges}
 	There were three main challenges encountered while working on this project. 
 	\subsection{Activity Selection}
 	The first challenge was selecting the reduced activity list to analyze for the project.
 	The original motivation behind the project was to apply the models and focus on detecting digital media usage, which is one of the applications for activity detection. 
-	Previous research showed the controlled environment results were accurate in detecting the different activities, but we found our semi-wild results were similar to the uncontrolled results, where differentiating between the different phone activities, typing on phone and browsing on phone, was difficult.
-	The focus then became measuring the effect of noise that was causing the degraded performance between the controlled and uncontrolled experiments.
+	Previous research showed the controlled environment results were accurate in detecting the different activities, but we found our semi-wild results were similar to the uncontrolled results, where differentiating between the different phone activities, typing on the phone and browsing on the phone, was difficult.
+	The focus then became measuring the effect of noise that was causing the degraded performance between the controlled and uncontrolled experiments. Our motivation focused on testing with Motion noise and acoustic noise and evaluating the performance of the model.
 	
 	
 	\subsection{Data Collection}
@@ -246,7 +298,7 @@
 	The weights were saved after each new run, which allowed the other members to continue work, but there was that added delay before more analysis could be conducted.
 	
 	\section{Conclusion}
-	
+	YVETTE - THIS NEEDS TO BE ADDED!
 	
 	\section*{Acknowledgment}
 	
