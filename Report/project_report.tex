@@ -50,10 +50,10 @@
 	\maketitle
 	
 	\begin{abstract}
-		Human activity recognition is applicable to healthcare, but there are limitations on devices that can be used.
-		The popularity of smart devices allow for comfort while also providing the data necessary to expand enable activity recognition.
-		Smart watches prove especially practical for recording both acoustic and inertial data because the mic is at close proximity to the hand which is often close to the activity being performed and the IMU records useful motion on the wrist as opposed to a smartphone in the pocket or strapped to the chest.
-		This project builds on previous research and focuses on the effects of acoustic and motion noise on recognizing the activities of daily living.
+		Human activity recognition is applicable to many fields, such as healthcare, but there are limitations on devices that can be used.
+		The popularity of smart devices allow for comfort while also providing the data necessary to enable activity recognition.
+		Smart watches prove especially practical for recording both acoustic and inertial data because the mic is at close proximity to the hand which is often close to the activity being performed. The IMU records useful motion on the wrist as opposed to a smartphone in the pocket or strapped to the chest.
+		This project builds on previous activity recognition research and focuses on the effects of acoustic and motion noise on recognizing the activities of daily living.
 		
 	\end{abstract}
 	
@@ -82,23 +82,24 @@
 	\subsection{Applications}
 	Audio monitoring can also be used to detect hazardous situations such as loud noises, falls, or emergencies. By integrating audio analysis into a smartwatch, users can be alerted to potential dangers in real-time, providing an added layer of safety.
 	
-	Human activity recognition has potential applications that can be leveraged in healthcare, dietary monitoring, and weight management
+	Human activity recognition has potential applications that can be leveraged in healthcare, dietary monitoring, and weight management.
+	One application is to provide a user with a more holistic view of their lifestyle, providing details on how long they spend on activities such as cooking or browsing on a phone. This information can be used to reflect and better manage time.
+	Another important application is for monitoring the progress of debilitating medical conditions, such as cognitive impairment.
 	
-	We propose a research project, recognizing activities of daily living using the IMU and audio data from a commodity smartwatch. 
+	We propose expanding on research recognizing activities of daily living using the IMU and audio data from a commodity smartwatch. 
 	We will be following existing research performed in \cite{2022_Leveraging_sound}, but adding extra noise while collecting data to better understand the effects of such noise in recognizing activities.
 	
 	\subsection{Motivation}
-	The researchers of the original paper conducted two generally different experiments. In the first experiment, an individual performs a series of activities for 30 seconds wearing a Fossil smartwatch which records inertial and acoustic data. There is a clear distinction between each activity and the watches are programmed to listen at frequent intervals. The authors implemented a variety of machine learning models to recognize the activity in this experiment with an accuracy of 94.3. The second experiment implements a less controlled, more realistic setting.
-	One limitation of this paper was that their not controlled experiment, the in-the-wild, had poor results due to background noise, mislabeling of activities due to the setup, and inconsistencies in how activities were performed.
-	Since their in-the-wild experiment was not controlled, not all the activities they were interested in were performed, in some cases activities overlapped, and combined with a limited sample size resulted in misclassifications\cite{2022_Misclassifications}.
+	The researchers of the original paper conducted two generally different experiments. In the first experiment, referred to as the semi-naturalistic experiment, an individual performs a series of activities for 30 seconds wearing a Fossil smartwatch which records inertial and acoustic data. There is a clear distinction between each activity and the watches are programmed to listen at frequent intervals. The authors implemented a variety of machine learning models to recognize the activity in this experiment with an accuracy of 94.3 \%. The second experiment, referred to as the in-the-wild experiment, implements a less controlled, more realistic setting.
+	One limitation of this paper was that their uncontrolled experiment had poor results due to background noise, mislabeling of activities due to the setup, and inconsistencies in how activities were performed.
+	Since their in-the-wild experiment was not controlled, not all the activities they were interested in were performed, in some cases activities overlapped, and combined with a limited sample size resulted in misclassifications \cite{2022_Misclassifications}.
 	
 	The goal for this project is to expand on the previous work and better understand some of the limitations the researchers encountered.
 	Since the main limitation was the performance degradation for their in-the-wild study, this project aims to have a semi-controlled environment, or semi-wild experiment, where activities are pre-defined but the noise from the in-the-wild study is added. 
 	The following are the areas of interest: measure the effect of wearing the watch on a passive instead of dominant hand, measure the effect of background noise while performing activities, and determine if more participants would lead to more accurate results.
 	
 	\section{Related Work}
-	\subsection{Addressing background noise}
-	Research on sound classification 
+	\subsection{Sound Classification}
 	A recent survey of hard of hearing people found that smartwatches, instead of smartphones, are the preferred device for sound awareness due to their social acceptability and support for both visual and haptic feedback \cite{2020_SoundWatch}.
 	Due to this demand, smartwatches are becoming more popular in sound classification research, but there are still limitations on performance due to acoustic variations, or background noise.
 	
@@ -107,6 +108,20 @@
 	
 	Other studies suggested having a user-centred data collection, where the user would record the same activity of interest in different scenarios, which would then be used to train a model to detect that activity \cite{2016_Personalizable} \cite{2020_SoundWatch}.
 	
+	\subsection{Motion Classification}
+	There was also a study done where work proposes several techniques to improve the robustness of a Human Activity Recognition (HAR) system that uses accelerometer signals from different smartwatches and smartphones. When using smartwatches to recognize whole body activities, the arm movements introduce additional variability giving rise to a significant degradation in HAR\cite{2018watch_martphone}
+	
+	Other research was done using Samsung Gear Smartwatch to collect data, then extract features, classify with H-SVM (Hierarchical Support Vector Machine) classifier and identify human activities classification. Experiment results show great effect at low sampling rate, such as 10 and 5 Hz, which will gives the energy saving. In most cases, the accuracy of activity recognition experiments was above 99 percent\cite{2017_SVM}
+	
+	\section{Machine Learning models}
+	Classical machine learning models such as Random Forest, Naive Bayes, and AdaBoost have been used in previous studies and prove to be effective in human activity recognition, but they rely on heuristic handcrafted feature extraction. These models showed decent results, but accuracy was only in the range of 60 to 85 for classifying motion data and 40 to 70 when classifying audio data. In order to achieve more reliable classification, the authors of \cite{2022_Leveraging_sound} experimented with two different deep neural network models and tried different fusion methods of the acoustic and motion data. These deep human activity recognition models allow input of raw sensory data captured by the smart watch instead of relying on expensive, handcrafted feature extraction and showed significant improvement to accuracy. The motion and acoustic data are trained separately using different models and then fused using a variety of techniques.
+	
+	\subsection{Inertial Model}
+	Two different models were experimented with to classify the inertial data. One of the models used is a variation of a framework called DeepConvLSTM which is based on convolutional and LSTM recurrent units. The modification allows the model to extract accelerometer and gyroscope features separately and then concatenate each modality at the last layer before passing through the softmax classifier. This modification improved accuracy, but the other model which was used, called Attend and Discriminate, proves to be more effective. This framework incorporates cross-channel self-attention and temporal attention. Both gyroscope and accelerometer data are concatenated before processing through convolutional layers to learn the interaction between the two. The resulting feature maps pass through a recurrent neural network to model temporal dynamics.
+	
+	\subsection{Acoustic Model}
+	In order to classify the acoustic data, the audio clips required some pre-processing. Log-mel spectrograms are extracted from the clips by computing the short-time Fourier transform for each segment, using a Hanning window of 1024 samples and hop size of 320 samples, and then converted into a 64-bin log-scalled Mel spectrogram.  Convolutional neural networks are applied to these log-mel spectrograms. The authors find a CNN architecture they refer  to as CNN14 comprised of six convolutional blocks consisting of two convolutional layers and intermediary average pooling layers.
+	
 	\begin{figure}[h]
 		\centering
 		\includegraphics[scale=0.50]{Architecture_of_Inertial_and_Acoustic_Models}
@@ -114,17 +129,8 @@
 		\label{fig: Architecture_of_Inertial_and_Acoustic_Models}
 	\end{figure}
 	
-	\section{Machine Learning models}
-	Classical machine learning models such as Random Forest, Naive Bayes, and AdaBoost have been used in previous studies and prove to be effective in human activity recognition, but they rely on heuristic handcrafted feature extraction. The authors of \cite{2022_Leveraging_sound} experimented with two different deep neural network models and tried different fusion methods of the acoustic and motion data.  These deep human activity recognition models allow input of raw sensory data captured by the smart watch. The motion and acoustic data are trained separately and then fused using a variety of techniques.
-	
-	\subsection{Inertial Model}
-	One of the models used to classify inertial data is called DeepConvLSTM and is based on convolutional and LSTM recurrent units. The other model is called Attend and Discriminate and proves to be more effective. This framework incorporates cross-channel self-attention and temporal attention. Both gyroscope and accelerometer data are concatenated before processing through convolutional layers to learn the interaction between the two. The resulting feature maps pass through a recurrent neural network to model temporal dynamics.
-	
-	\subsection{Acoustic Model}
-	Convolutional neural networks are used to classify the audio data. These networks are applied to log-mel spectrograms which have been extracted from the audio signals. The authors find a CNN architecture they refer  to as CNN14 comprised of six convolutional blocks consisting of two convolutional layers and intermediary average pooling layers.
-	
 	\subsection{Fusion Methods}
-	The inertial and acoustic data need to be incorporated together. The model applies an aggregation method which concatenates the feature maps. There were other methods such as score-level fusion, but they did not perform as well. The concatenated feature maps are followed by a single classification head and joint training of both acoustic and inertial networks.
+	The inertial and acoustic data then need to be incorporated together. The model applies an aggregation method which concatenates the feature maps. There were other methods such as score-level fusion, but they did not perform as well. The concatenated feature maps are followed by a single classification head and joint training of both acoustic and inertial networks. The predicted class probabilities are averaged for a final probability value.
 	
 	\section{Methodology}
 	For the data collection, only a subset of the original activities was performed: writing, typing on a keyboard, brushing teeth, sweeping, and washing dishes.
@@ -136,11 +142,11 @@
 	In the original paper the authors used the same watch, the Fossil Gen 4, for all of their experiments \cite{2022_Leveraging_sound}.
 	Their custom application, which collected motion and acoustic data, was developed on Android Wear OS 2.11, with inertial sampling at 50 Hz and acoustic sampling at 22.05 kHz.
 	
-	For this project two separate Samsung Galaxy watches were used, with a custom app developed on Tizen OS 5.5.
+	For this project, two separate Samsung Galaxy watches were used with a custom app developed on Tizen OS 5.5.
 	The inertial data was also sampled at 50 Hz, but since the smartphone recorded at 44.1 kHz, it was downsampled in post processing to match the rate of the original paper.
 	
 	\subsection{Watch App}
-	The original intention was to collect both motion and acoustic data from the smartwatch, but while developing the app there were problems with the writing to the watch's file system.
+	The original intention was to collect both motion and acoustic data from the smartwatch, but while developing the app there were problems with writing to the watch's file system.
 	The main problem seemed to be with the permissions configured on the native c app.
 	Based on the available documentation, those problems could be addressed by switching to a web app instead, but due to lack of experience with web apps and time constraints, instead of storing the collected data to a file on the watch the inertial data was collected from the debug log and a smartphone was used to collect the acoustic data.
 	
@@ -243,8 +249,8 @@
 	Other modifications to the model included changing plotting methods and various function parameters most likely due to the authors employing outdated libraries.
 	
 	\subsection{Number of participants}
-	We wanted to verify whether adding more training data was likely to improve the accuracy of the model. To do this, we ran the model using different numbers of participants and recorded the final test accuracy to evaluate whether the improvement starts to decrease. Figure \ref{fig: f-score_vs_participants} shows the promise of increased accuracy when we add more participant training data.
-	Figure \ref{fig: Original_Confusion_Matrix} shows the confusion matrix for the original model trained on all the available semi-naturalistic data.
+	We wanted to verify whether adding more training data was likely to improve the accuracy of the model. To do this, we ran the model using different numbers of participants and recorded the final test accuracy to evaluate whether the improvement starts to decrease. Figure \ref{fig: f-score_vs_participants} shows the results of this experiment after training for 100 epochs. As you can see, training on just two participants performs poorly with an accuracy of around 40 percent. If you run the same experiment using more participant data, the accuracy improves significantly. Importantly, the upward trend shows no sign of leveling. The plot suggests that including more training data will further improve the model accuracy. 
+	Figure \ref{fig: Original_Confusion_Matrix} shows the confusion matrix for the original model trained on all the available semi-naturalistic data. The model performs well, but there is still room for improvement.
 	
 	\begin{figure}[h]
 		\centering
@@ -255,7 +261,7 @@
 	
 	\begin{figure}[h]
 		\centering
-		\includegraphics[scale=0.60]{Original_Confusion_Matrix}
+		\includegraphics[scale=1.2]{Original_Confusion_Matrix}
 		\caption{Confusion matrix for model trained on Semi-Naturalistic dataset}
 		\label{fig: Original_Confusion_Matrix}
 	\end{figure}
@@ -294,15 +300,15 @@
 	
 	\subsection{Running the original models}
 	The original models had to be modified before they could be used. 
-	Due to their complexity and memory requirements, only one member was able to get them to fully run.
-	The weights were saved after each new run, which allowed the other members to continue work, but there was that added delay before more analysis could be conducted.
+	Due to their complexity and memory requirements, only one member was able to get them to fully run. This was only after tailoring the model to run on Google Colab because none of us had the necessary hardware, specifically the memory and GPU processing. Even with upgrading to high-ram and GPU processing through Colab, the model required over five hours to train using 15 participants. Fortunately, we were able to save the weights after each training session which allowed the other members to continue work, but there was that added delay before more analysis could be conducted.
 	
 	\section{Conclusion}
-	YVETTE - THIS NEEDS TO BE ADDED!
+	
+	We were able to incorporate the data from the 15 participants whom the authors used to gather data performing various activities around the house. Using the Attend and Discriminate-CNN14 model and concatenating the acoustic and inertial data, we achieved fairly reliable results classifying human activities. Our preliminary results indicate that including more participant data will continue to improve accuracy. Given more time, we would have liked to experiment with more data and recording data in various noisy environments with factors such as dog barking or music in the background.
+	
 	
 	\section*{Acknowledgment}
-	
-	Paper we are implementing \cite{2022_Leveraging_sound}.
+	We re-implemented the following paper using their available models and datasets: \cite{2022_Leveraging_sound}.
 	
 	\nocite{*}
 	\printbibliography
